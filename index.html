@@ -1,0 +1,1718 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'unsafe-inline'; img-src data: blob: 'self'; connect-src 'none'; worker-src 'self'; manifest-src 'self'">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="symbol-180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Familienfinanzierung</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<style>
+/* Layout: Seitenleiste (Mac/iPad quer) bzw. Reiterleiste oben (iPad hochkant), große Tippflächen bei Touch */
+:root{
+  --tap:44px;
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#1d2330; --muted:#677084; --line:#e2e5ea;
+  --accent:#2f6fde; --accent-soft:#e8f0fd; --input:#eef4ff; --input-line:#b9cdf3;
+  --good:#1f8a4c; --good-soft:#e5f5ec; --warn:#b5651d; --warn-soft:#fdf1e4;
+  --c1:#c2533f; --c2:#2f6fde; --c3:#2a9d8f; --c4:#8a63d2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181d; --panel:#1f2229; --ink:#e7e9ee; --muted:#9aa2b2; --line:#2e323b;
+    --accent:#6d9cf0; --accent-soft:#233149; --input:#1d2a40; --input-line:#36507c;
+    --good:#4cc283; --good-soft:#1c3328; --warn:#e6a15a; --warn-soft:#3a2b1c;
+    --c1:#e67d69; --c2:#6d9cf0; --c3:#4cc0b2; --c4:#ad8ff0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181d; --panel:#1f2229; --ink:#e7e9ee; --muted:#9aa2b2; --line:#2e323b;
+  --accent:#6d9cf0; --accent-soft:#233149; --input:#1d2a40; --input-line:#36507c;
+  --good:#4cc283; --good-soft:#1c3328; --warn:#e6a15a; --warn-soft:#3a2b1c;
+  --c1:#e67d69; --c2:#6d9cf0; --c3:#4cc0b2; --c4:#ad8ff0; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+nav{background:var(--panel);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px}
+nav h1{font-size:15px;margin:0 8px 14px;line-height:1.3}
+nav h1 small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+nav button.tab{all:unset;cursor:pointer;padding:8px 10px;border-radius:7px;color:var(--ink);font-size:13.5px}
+nav button.tab:hover{background:var(--bg)}
+nav button.tab.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav .spacer{flex:1}
+nav .tools{display:flex;flex-direction:column;gap:6px;padding:8px}
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:7px;padding:6px 10px;font:inherit;font-size:12.5px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+main{padding:24px 28px 60px;max-width:1280px;width:100%}
+h2{font-size:21px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px}
+h3{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:26px 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.grid2{display:grid;grid-template-columns:minmax(330px,420px) minmax(0,1fr);gap:20px;align-items:start}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi .l{color:var(--muted);font-size:12px}
+.kpi .v{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.kpi.good .v{color:var(--good)}
+.field{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13px}
+.field label small{display:block;color:var(--muted);font-size:11.5px;line-height:1.3}
+.inp{display:flex;align-items:center;background:var(--input);border:1px solid var(--input-line);border-radius:6px;padding:0 8px}
+.inp input,.inp select{all:unset;width:100%;text-align:right;padding:5px 0;font-variant-numeric:tabular-nums;color:var(--ink)}
+.inp select{text-align:left;cursor:pointer;padding-left:6px}
+.inp span{color:var(--muted);font-size:12px;padding-left:5px}
+.inp:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.group-title{font-weight:650;font-size:13px;margin:14px 0 4px;color:var(--accent)}
+.group-title:first-child{margin-top:0}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:6px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:600;background:var(--panel);position:sticky;top:0}
+td:first-child,th:first-child{text-align:left}
+tr.yearend td{background:var(--accent-soft)}
+tr.hl td{font-weight:650}
+.cmp td:first-child{white-space:normal}
+.pos{color:var(--good)} .neg{color:var(--c1)}
+.status{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:7px;font-size:13px;margin:6px 0}
+.status.ok{background:var(--good-soft);color:var(--good)}
+.status.warn{background:var(--warn-soft);color:var(--warn)}
+.scroll{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{all:unset;cursor:pointer;padding:5px 12px;font-size:12.5px}
+.seg button.on{background:var(--accent);color:#fff}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.st-grid .yr{font-size:12px;color:var(--muted);margin-bottom:2px}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:11px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;margin:6px 0 0}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.gloss td,.gloss th{white-space:normal;text-align:left;vertical-align:top}
+.gloss td:first-child{width:22%;min-width:150px}.gloss td:nth-child(2){width:36%}.gloss td{line-height:1.5;padding-top:10px;padding-bottom:10px}
+.note{color:var(--muted);font-size:12.5px}
+.hidden{display:none}
+.tip{position:fixed;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-variant-numeric:tabular-nums}
+.tip{z-index:30;max-width:min(340px,calc(100vw - 16px))}
+
+/* ===== iPad / Touch (v3) ===== */
+html{-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+button,.btn,nav button.tab,.seg button,.stp{touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.btn:focus-visible,nav button.tab:focus-visible,.seg button:focus-visible,.stp:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{min-width:0;padding-block:24px 60px;padding-left:max(28px, env(safe-area-inset-left, 0px));padding-right:max(28px, env(safe-area-inset-right, 0px))}
+.grid2>div{min-width:0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav .more{display:none}
+nav .navgrp{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 10px 3px;font-weight:600}
+.gs-title{font-size:15px;font-weight:700;margin:0 0 6px}
+.who-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;align-items:start}
+.who{padding:16px 16px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.who .wh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.who .wh b{font-size:17px}
+.who .wh span{font-size:12px;color:var(--muted)}
+.who .big{margin:10px 0 2px;padding:12px 14px;border-radius:8px;background:var(--accent-soft)}
+.who .big .l{font-size:12px;color:var(--muted)}
+.who .big .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
+.who .big .d{font-size:12.5px;color:var(--muted)}
+.who dl{margin:6px 0 0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px}
+.who dt,.who dd{margin:0;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.who dd{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.who dt small,.who dd small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.who dl>:nth-last-child(-n+2){border-bottom:0}
+.who dd.good{color:var(--good)}
+.who dd.bad,.kpi.bad .v{color:var(--c1)}
+.golink{all:unset;cursor:pointer;margin-top:6px;font-size:14px;color:var(--accent);align-self:flex-start;min-height:44px;display:inline-flex;align-items:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.golink:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px;align-items:start;margin-bottom:6px}
+.cols2>div{min-width:0}
+#boxSandra{grid-column:1/-1}
+@media (min-width:560px){.who.wide dl{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;column-gap:14px}.who.wide dl>dd:nth-of-type(odd){padding-right:14px;border-right:1px solid var(--line)}.who.wide dl>:nth-last-child(-n+4){border-bottom:0}}
+tr.grp td{background:var(--bg);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:650;text-align:left;padding-top:10px}
+.sw{all:unset;cursor:pointer;justify-self:end;width:54px;height:32px;border-radius:22px;border:6px solid transparent;background-clip:padding-box;background-color:var(--line);position:relative;transition:background .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.sw[aria-checked="true"]{background-color:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(22px)}
+.sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.field.swf{grid-template-columns:minmax(0,1fr) auto!important;min-height:44px}
+.off{opacity:.45}
+.field.auto .inp{opacity:.6;border-style:dashed}
+.szbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.szbar .lbl{font-size:13px;color:var(--muted);margin-right:2px}
+.chip{all:unset;cursor:pointer;min-height:38px;padding:0 14px;border-radius:19px;border:1px solid var(--line);background:var(--panel);font-size:14px;display:inline-flex;align-items:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.chip.ghost{border-style:dashed;color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (pointer:coarse){.chip{min-height:44px;padding:0 16px;font-size:15px}}
+.sz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px;align-items:start;margin-top:4px}
+.sz{min-width:0}
+.sz.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.sz-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.sz-name{flex:1;min-width:0;font:inherit;font-size:16px;font-weight:650;color:var(--ink);background:var(--input);border:1px solid var(--input-line);border-radius:8px;padding:0 10px;height:44px}
+.sz-name:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.sz-tag{font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap}
+.wiz{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:max(16px,4vh) 16px 16px;overflow:auto}
+.wiz-card{background:var(--panel);color:var(--ink);border-radius:14px;padding:20px;width:min(560px,100%);box-shadow:0 12px 40px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:12px}
+.wiz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.wiz-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.wiz-bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.wiz-q{font-size:21px;font-weight:700;line-height:1.3}
+.wiz-help{font-size:15px;line-height:1.5;color:var(--muted);margin:0}
+.wiz-inp{display:flex;align-items:center;gap:8px}
+.wiz-inp input{flex:1;min-width:0;font:inherit;font-size:26px;font-weight:650;text-align:right;height:58px;border:1px solid var(--input-line);background:var(--input);border-radius:10px;padding:0 14px;color:var(--ink);font-variant-numeric:tabular-nums}
+.wiz-inp input.wiz-text{text-align:left;font-size:20px}
+.wiz-inp input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.wiz-u{font-size:18px;color:var(--muted);min-width:22px}
+.wiz-pm{all:unset;cursor:pointer;width:58px;height:58px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--accent);font-size:28px;text-align:center;box-sizing:border-box;touch-action:manipulation;user-select:none;-webkit-user-select:none;flex:none}
+.wiz-pm:active{background:var(--accent-soft)}
+.wiz-chips{display:flex;flex-wrap:wrap;gap:8px}
+.wiz-chips .chip{min-height:44px;padding:0 16px;font-size:15px}
+.wiz .status{font-size:15px;line-height:1.45;margin:0}
+.wiz-nav{display:flex;justify-content:space-between;gap:10px;margin-top:4px}
+.wiz-nav .btn{min-height:50px;padding:0 24px;font-size:16px}
+.wiz-nav .btn.primary{margin-left:auto}
+.wiz-name{font-size:17px;font-weight:650}
+.wiz-sum td{font-size:15px;padding:8px 9px}
+.wiz-sum td:last-child{font-weight:650}
+.wiz-sum small{font-weight:400;color:var(--muted);font-size:13px}
+.sz-info{margin:10px 0 0}
+.sz .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sz .acts .btn{flex:1 1 auto}
+@media (max-width:1300px){
+  nav .tabs.fr{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent)}
+  nav .tabs.fl{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 40px),transparent)}
+  nav .tabs.fl.fr{-webkit-mask-image:linear-gradient(to right,transparent,#000 40px,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,transparent,#000 40px,#000 calc(100% - 40px),transparent)}
+}
+@media (max-width:900px){#tab-cockpit .grid2>div:last-child{order:-1}#ovStatus{margin-bottom:4px}}
+/* Plus/Minus-Tasten an den Eingabefeldern */
+.inp{gap:2px}
+.stp{all:unset;cursor:pointer;flex:none;width:26px;height:26px;display:grid;place-items:center;border-radius:5px;color:var(--accent);font-size:17px;font-weight:600;line-height:1}
+.stp:hover{background:var(--accent-soft)}
+.stp:active{background:var(--accent);color:#fff}
+.field{grid-template-columns:1fr 168px}
+/* Eingaben im Cockpit über volle Breite in Spalten verteilen, sobald Platz ist */
+#inputs{column-width:340px;column-gap:28px}
+#inputs .field,#inputs .group-title{break-inside:avoid}
+#inputs .group-title{break-after:avoid;padding-top:2px}
+#inputs .note{column-span:all}
+/* Tabellen: erste Spalte bleibt beim Wischen stehen */
+.scroll{max-height:min(620px,68vh);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.scroll td:first-child,.scroll th:first-child{position:sticky;left:0;background:var(--panel);z-index:1}
+.scroll th:first-child{z-index:2}
+.scroll th{box-shadow:inset 0 -1px 0 var(--line), 0 2px 4px rgba(0,0,0,.04);z-index:1}
+.scroll th:first-child{z-index:3}
+.scroll tr.yearend td:first-child{background:var(--accent-soft)}
+.chart{touch-action:pan-y;max-height:min(48vh,380px)}
+/* Dialog für Szenario / Tabellen */
+.ovl{position:fixed;inset:0;z-index:40;background:rgba(10,14,22,.45);display:grid;place-items:center;padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.dlg{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px;width:min(640px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.dlg h4{margin:0;font-size:17px}
+.dlg p{margin:0}
+.dlg textarea{width:100%;min-height:200px;resize:vertical;font:12px/1.4 ui-monospace,Menlo,monospace;background:var(--input);color:var(--ink);border:1px solid var(--input-line);border-radius:8px;padding:10px}
+.dlg .acts{display:flex;flex-wrap:wrap;gap:8px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));z-index:50;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.btn.danger{border-color:var(--c1);color:var(--c1)}
+.stbox>summary{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;color:var(--accent);padding:2px 0;list-style:none}
+.stbox>summary::-webkit-details-marker{display:none}
+.stbox>summary::before{content:"▸";display:inline-block;transition:transform .15s}
+.stbox[open]>summary::before{transform:rotate(90deg)}
+.stbox>summary .note{font-weight:400}
+.stbox[open]>summary{margin-bottom:10px}
+
+/* Bis 1300 px (iPad quer und hochkant): Reiter als Leiste oben statt Seitenleiste */
+nav .tabs{display:contents}
+@media (max-width:1300px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  nav{position:sticky;top:env(safe-area-inset-top, 0px);z-index:20;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;padding:8px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px));border-right:0;border-bottom:1px solid var(--line)}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:21;background:var(--panel)}
+  nav h1,.spacer,nav .navgrp{display:none}
+  nav .tabs{display:flex;gap:4px;overflow-x:auto;flex:1 1 0;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav .tabs::-webkit-scrollbar{display:none}
+  nav button.tab{white-space:nowrap;flex:none}
+  nav .more{display:inline-flex}
+  nav .tools{display:none;flex:1 1 100%;flex-direction:row;flex-wrap:wrap;padding:4px 0 0}
+  nav.open .tools{display:flex}
+  main{max-width:none;padding-block:16px 48px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+}
+/* iPad quer (901–1300 px): Cockpit zweispaltig – Eingaben links in eigener Scrollspalte, Ergebnisse rechts sofort sichtbar */
+@media (min-width:901px) and (max-width:1300px){
+  .grid2{grid-template-columns:minmax(380px,440px) minmax(0,1fr);gap:16px}
+  #inputs{position:sticky;top:calc(var(--navh, 62px) + 12px);max-height:calc(100vh - var(--navh, 62px) - 24px);max-height:calc(100dvh - var(--navh, 62px) - 24px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;column-width:auto!important;column-count:auto!important}
+  #tab-cockpit .sub{margin-bottom:12px}
+  #tab-cockpit h3:first-of-type{margin-top:18px}
+}
+/* Hochkant und kleiner: alles untereinander */
+@media (max-width:900px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+}
+
+/* Touch-Bedienung (iPad, iPhone): Fingergerechte Größen, 16px in Feldern verhindert Auto-Zoom */
+@media (pointer:coarse){
+  html,body{font-size:15px}
+  nav button.tab{min-height:var(--tap);display:flex;align-items:center;padding:0 14px;font-size:15px;border-radius:9px}
+  .btn{min-height:var(--tap);padding:0 14px;font-size:15px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center}
+  .stbox>summary{min-height:var(--tap);font-size:15px}
+  .seg button{min-height:var(--tap);display:flex;align-items:center;padding:0 20px;font-size:15px}
+  .inp{border-radius:9px;padding:0 4px}
+  .inp input,.inp select{font-size:16px;padding:0 4px;min-height:var(--tap)}
+  .inp select{line-height:var(--tap);height:var(--tap);padding-left:10px}
+  .inp span{font-size:13px;padding:0 2px 0 4px}
+  .stp{width:40px;height:40px;font-size:22px;border-radius:8px}
+  .stp:hover{background:transparent}
+  .stp:active{background:var(--accent);color:#fff}
+  .field{grid-template-columns:minmax(0,1fr) 206px;padding:8px 0;gap:10px}
+  .stp{width:36px}
+  .field label{font-size:15px}
+  .field label small{font-size:13px}
+  .group-title{font-size:15px}
+  #inputs{column-width:400px}
+  .st-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+  .st-grid .yr{font-size:13px}
+  th,td{padding:9px 11px}
+  th{font-size:13px}
+  .kpi .l,.kpi .d{font-size:13px}
+  .status{font-size:14px;padding:10px 12px}
+  .legend{font-size:14px;gap:10px 18px}
+  .note{font-size:13.5px}
+  .chart text{font-size:12px}
+  .tip{font-size:14px;padding:9px 11px}
+}
+@media (pointer:coarse) and (max-width:1300px){nav .tools .btn{flex:1 1 auto}}
+/* iPad quer mit Finger: kompaktere Felder, damit Beschriftungen nicht umbrechen; alle Reiter passen in die Leiste */
+@media (pointer:coarse) and (min-width:901px) and (max-width:1300px){
+  .grid2{grid-template-columns:minmax(400px,470px) minmax(0,1fr)}
+  .field{grid-template-columns:minmax(0,1fr) 178px;gap:8px}
+  .stp{width:34px}
+  .inp span{padding:0 1px 0 3px}
+  nav button.tab{padding:0 11px;font-size:14.5px}
+  nav .more{padding:0 12px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{nav{display:none}.app{grid-template-columns:1fr}.scroll{max-height:none}}
+</style>
+<div class="app">
+<nav>
+  <h1>Familien&shy;finanzierung<small>Mutter, Sohn &amp; Tochter</small></h1>
+  <div class="tabs" id="tabs">
+  <button class="tab active" data-tab="cockpit">Übersicht</button>
+  <div class="navgrp">Sohn</div>
+  <button class="tab" data-tab="marcus">Sohn: Voll / Kombi</button>
+  <button class="tab" data-tab="kombi">Tilgung Kombi</button>
+  <button class="tab" data-tab="voll">Tilgung Voll</button>
+  <div class="navgrp">Mutter &amp; Tochter</div>
+  <button class="tab" data-tab="anja">Mutter: Geld &amp; Zinsen</button>
+  <button class="tab" data-tab="sandra">Tochter</button>
+  <div class="navgrp">Einstellungen</div>
+  <button class="tab" data-tab="szen">Szenarien</button>
+  <button class="tab" data-tab="zins">Zinsannahmen</button>
+  <button class="tab" data-tab="glossar">Glossar</button>
+  </div>
+  <button class="btn more" id="btnMore" aria-expanded="false" aria-controls="tools">Mehr …</button>
+  <div class="spacer"></div>
+  <div class="tools" id="tools">
+    <button class="btn" id="btnSave">Szenario sichern / laden …</button>
+    <button class="btn" id="btnPdf">Alles als PDF exportieren</button>
+    <button class="btn" id="btnCsv">Tabellen kopieren (Numbers/Excel)</button>
+    <button class="btn" id="btnReset">Auf Ausgangswerte zurücksetzen</button>
+    <input type="file" id="fileIn" accept=".json,application/json,text/plain" class="hidden">
+  </div>
+</nav>
+<main>
+
+<!-- ÜBERSICHT -->
+<section id="tab-cockpit">
+  <h2>Übersicht</h2>
+  <p class="sub">Das Wichtigste für Mutter und Sohn auf einen Blick, dazu die Grundeinstellungen. Alles rechnet sofort neu, Eingaben werden gemerkt. Details in den weiteren Reitern.</p>
+  <div class="szbar" id="szBar"></div>
+  <div class="grid2">
+    <div class="card" id="inputs"></div>
+    <div>
+      <div class="who-grid">
+        <div class="card who" id="boxAnja"></div>
+        <div class="card who" id="boxMarcus"></div>
+        <div class="card who wide" id="boxSandra"></div>
+      </div>
+      <div id="ovStatus" style="margin-top:14px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARCUS -->
+<section id="tab-marcus" class="hidden">
+  <h2>Sohn: Vollkredit oder Kombi?</h2>
+  <p class="sub">A: alles über die Bank. B (Kombi): Bankkredit plus Privatkredit von Mutter.</p>
+  <div class="kpis" id="kpis"></div>
+  <h3>Vergleich im Detail</h3>
+  <p class="note" id="noteAnschluss"></p>
+  <div class="card tw" style="padding:4px 0"><table class="cmp" id="tblVergleich"></table></div>
+  <div id="statusBox" style="margin-top:10px"></div>
+  <h3>Schuldenabbau über die Jahre</h3>
+  <div class="card"><div id="chartMain"></div></div>
+</section>
+
+<!-- KOMBI -->
+<section id="tab-kombi" class="hidden">
+  <h2>Tilgungsplan Sohn – Kombi-Modell</h2>
+  <p class="sub">Bankkredit plus Privatkredit von Mutter. Sondertilgungen werden jeweils im 12. Monat des Jahres verrechnet.</p>
+  <div class="kpis" id="kpisKombi"></div>
+  <h3>Jährliche Sondertilgungen</h3>
+  <div class="card">
+    <div class="row"><span class="note">Bank (€) / Mutter (€) pro Jahr</span>
+      <button class="btn" data-clear="stKombiBank,stKombiAnja">Alle leeren</button></div>
+    <div class="st-grid" id="stKombi"></div>
+  </div>
+  <h3>Monatsplan</h3>
+  <div class="row"><div class="seg" data-view="kombi"><button class="on" data-v="y">Jahre</button><button data-v="m">Monate</button></div></div>
+  <div class="scroll"><table id="tblKombi"></table></div>
+</section>
+
+<!-- VOLL -->
+<section id="tab-voll" class="hidden">
+  <h2>Tilgungsplan Sohn – Bank-Vollkredit</h2>
+  <p class="sub">Klassischer Vollkredit über die Bank als Vergleichsbasis.</p>
+  <div class="kpis" id="kpisVoll"></div>
+  <h3>Jährliche Sondertilgungen</h3>
+  <div class="card">
+    <div class="field swf"><label>Sondertilgungen aus dem Kombi-Plan übernehmen<small>Bank + Mutter zusammen – so bleibt der Vergleich immer 1:1</small></label>
+      <button type="button" class="sw" data-sw="stAuto" role="switch" aria-label="Sondertilgungen aus Kombi übernehmen"></button></div>
+    <p class="note" id="stAutoNote" style="margin:8px 0 0"></p>
+    <div id="stVollManual" style="margin-top:10px">
+    <div class="row"><span class="note">Bank (€) pro Jahr</span>
+      <button class="btn" id="btnCopyKombi">Aus Kombi übernehmen (Bank + Mutter)</button>
+      <button class="btn" data-clear="stVoll">Alle leeren</button></div>
+    <div class="st-grid" id="stVoll"></div>
+    </div>
+  </div>
+  <h3>Monatsplan</h3>
+  <div class="row"><div class="seg" data-view="voll"><button class="on" data-v="y">Jahre</button><button data-v="m">Monate</button></div></div>
+  <div class="scroll"><table id="tblVoll"></table></div>
+</section>
+
+<!-- SANDRA -->
+<section id="tab-sandra" class="hidden">
+  <h2>Privatkredit von Mutter an die Tochter</h2>
+  <p class="sub">Eigene Kalkulation inkl. Sondertilgungen (im 12. Monat des Jahres verrechnet).</p>
+  <div class="kpis" id="kpisSandra"></div>
+  <h3>Jährliche Sondertilgungen</h3>
+  <div class="card">
+    <div class="row"><span class="note">Tochter (€) pro Jahr</span>
+      <button class="btn" data-clear="stSandra">Alle leeren</button></div>
+    <div class="st-grid" id="stSandra"></div>
+  </div>
+  <h3>Monatsplan</h3>
+  <div class="row"><div class="seg" data-view="sandra"><button class="on" data-v="y">Jahre</button><button data-v="m">Monate</button></div></div>
+  <div class="scroll"><table id="tblSandra2"></table></div>
+</section>
+
+<!-- ANJA -->
+<section id="tab-anja" class="hidden">
+  <h2>Mutter: Geld &amp; Zinsen</h2>
+  <p class="sub">Wohin der Hauswert fließt, was Mutter aus den Privatkrediten zurückbekommt und was davon steuerfrei bleibt.</p>
+  <div class="cols2">
+    <div><h3 style="margin-top:0">Aufteilung des Hauswerts</h3>
+      <div class="card tw" style="padding:4px 0"><table class="cmp" id="tblAufteilung"></table></div></div>
+    <div><h3 style="margin-top:0">Privatkredite &amp; Gesamtertrag</h3>
+      <div class="card tw" style="padding:4px 0"><table class="cmp" id="tblSandra"></table></div></div>
+  </div>
+  <h3>Zinsen &amp; Steuer</h3>
+  <div class="card" style="max-width:520px;margin-bottom:16px">
+    <div class="field"><label>Verfügbarer Sparer-Pauschbetrag Mutter<small>1.000 € allein / 2.000 € Ehepaar – abzgl. anderer Zinsen/Dividenden</small></label>
+      <div class="inp"><input data-k="pausch" inputmode="decimal"><span>€</span></div></div>
+  </div>
+  <div class="kpis" id="kpisAnja"></div>
+  <h3>Zinsen pro Jahr für Mutter</h3>
+  <p class="sub">Die Zinsen sinken von Jahr zu Jahr, weil Sohn und Tochter laufend tilgen. Zinsfreie Monate am Anfang senken das 1. Jahr.</p>
+  <div class="scroll"><table id="tblZinsAnja"></table></div>
+  <h3>Jährlicher Rückfluss an Mutter</h3>
+  <div class="card"><div id="chartAnja"></div></div>
+  <h3>Jahresübersicht 1 bis 30 (Restschulden und Rückflüsse)</h3>
+  <div class="scroll"><table id="tblAnja"></table></div>
+</section>
+
+<!-- ZINS -->
+<section id="tab-zins" class="hidden">
+  <h2>Zinsannahmen Bankkredit Sohn</h2>
+  <p class="sub">Automatische Zinsschätzung nach Beleihung und Zinsbindung (Marktschätzung vom 13.11.2026, Effektivzinsen, gute Bonität). Blaue Felder kannst du anpassen.</p>
+  <div class="card" id="vorgaben" style="max-width:680px;margin-bottom:18px">
+    <div class="group-title">Vorgaben für die Monatsraten vom Sohn</div>
+    <div class="field"><label>Feste Monatsrate an die Bank<small>von der Bank vorgegeben · leer = die Bank bekommt Budget − Rate an Mutter</small></label><div class="inp"><input data-k="bankrate" inputmode="decimal" placeholder="–"><span>€</span></div></div>
+    <div class="field"><label>Mindestrate vom Sohn an Mutter<small>was Mutter mindestens im Monat braucht · leer = keine Vorgabe</small></label><div class="inp"><input data-k="mindestAnja" inputmode="decimal" placeholder="–"><span>€</span></div></div>
+    <div class="field swf" id="fFreiSonder"><label>Frei werdende Rate als Sondertilgung an die Bank<small>sobald Mutters Kredit getilgt ist, einmal im Jahr – so bleibt die Belastung vom Sohn gleich</small></label>
+      <button type="button" class="sw" data-sw="freiSonder" role="switch" aria-label="Frei werdende Rate als Sondertilgung an die Bank"></button></div>
+    <div id="rateNote" style="margin-top:8px"></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="group-title">A. Topzins (Beleihung bis 60 %) nach Zinsbindung</div>
+        <div id="topzins"></div>
+        <div class="group-title">B. Aufschlag nach Beleihungsauslauf</div>
+        <div id="stufen"></div>
+        <div class="group-title">C. Individuelle Anpassung</div>
+        <div class="field"><label>Individueller Auf-/Abschlag<small>z. B. +0,20 bei mittlerer Bonität, –0,10 bei sehr gutem Angebot</small></label><div class="inp"><input data-k="indiv" inputmode="decimal"><span>%-Pkt.</span></div></div>
+        <div class="field"><label>Echtes Bankangebot KOMBI<small>leer = automatische Schätzung</small></label><div class="inp"><input data-k="angebotKombi" inputmode="decimal" placeholder="–"><span>%</span></div></div>
+        <div class="field"><label>Echtes Bankangebot VOLLKREDIT<small>leer = automatische Schätzung</small></label><div class="inp"><input data-k="angebotVoll" inputmode="decimal" placeholder="–"><span>%</span></div></div>
+        <div class="group-title">D. Anschlusszins nach der Zinsbindung</div>
+        <div class="field swf"><label>Anschlusszins berücksichtigen<small>aus = der Bankzins bleibt die ganze Laufzeit gleich</small></label>
+          <button type="button" class="sw" data-sw="anschlussAktiv" role="switch" aria-label="Anschlusszins berücksichtigen"></button></div>
+        <div class="field" id="fAnschluss"><label>Bankzins nach Ende der Zinsbindung<small>gilt für Kombi und Vollkredit, z. B. 5,00 für einen ungünstigen Fall</small></label><div class="inp"><input data-k="anschlussZins" inputmode="decimal"><span>%</span></div></div>
+      </div>
+      <p class="note">Quellen der Ausgangswerte: Finanztip, Baufivergleich, Capitalo, baufi-deutschland.de (Stand 30.10.–08.11.2026); 15–30 Jahre am 13.11.2026 aktualisiert nach baufivergleich.de, finanzierung-mit-kopf.de, Interhyp, Dr. Klein.</p>
+    </div>
+    <div>
+      <h3 style="margin-top:0">E. Ergebnis: verwendeter Bankzins</h3>
+      <div class="card tw" style="padding:4px 0"><table class="cmp" id="tblZins"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- SZENARIEN -->
+<section id="tab-szen" class="hidden">
+  <h2>Szenarien</h2>
+  <p class="sub">Jedes Szenario ist ein eigener, vollständiger Stand: Grundeinstellungen, Bankangebot, Anschlusszins und Sondertilgungen. Eines ist immer aktiv. Alles, was du änderst – egal in welchem Bereich – gehört zum aktiven Szenario und wird automatisch gemerkt. Nur die Marktzinsen (Zinsannahmen A und B) gelten für alle.</p>
+  <div class="row"><button class="btn primary" id="szWiz">Neues Szenario mit Fragen anlegen</button>
+    <button class="btn" id="szAdd">+ Kopie des aktiven Szenarios</button>
+    <span class="note">In der Übersicht schaltest du oben mit einem Tipp um.</span></div>
+  <div class="sz-grid" id="szList"></div>
+  <h3>Ergebnisse im Vergleich</h3>
+  <div class="scroll"><table id="tblSzen"></table></div>
+</section>
+
+<!-- GLOSSAR -->
+<section id="tab-glossar" class="hidden">
+  <h2>Glossar</h2>
+  <p class="sub">Die wichtigsten Begriffe für Mutter, Sohn &amp; Tochter – mit den aktuellen Zahlen. Der Rechner ersetzt keine Beratung: Vertrag und Grundbuch klärt der Notar, Steuerfragen ein Steuerberater.</p>
+  <div class="card tw" style="padding:4px 0"><table class="gloss" id="tblGlossar"></table></div>
+</section>
+
+</main>
+</div>
+<div class="tip hidden" id="tip"></div>
+<div class="ovl" id="dlgSzenario" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <h4 id="dlgTitle">Szenario sichern oder laden</h4>
+    <p class="note">Das Feld enthält alle aktuellen Eingaben. Zum Sichern auf „Kopieren“ tippen und z. B. in Notizen einfügen. Zum Laden einen gesicherten Text hier einfügen und „Übernehmen“ tippen oder eine .json-Datei wählen.</p>
+    <textarea id="dlgText" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+    <div class="acts">
+      <button class="btn primary" id="dlgCopy">Kopieren</button>
+      <button class="btn" id="dlgApply">Übernehmen</button>
+      <button class="btn" id="dlgFile">Datei wählen …</button>
+      <span style="flex:1"></span>
+      <button class="btn" id="dlgClose">Schließen</button>
+    </div>
+  </div>
+</div>
+<div class="wiz" id="wiz" hidden><div class="wiz-card" role="dialog" aria-modal="true" aria-labelledby="wizFrage">
+  <div class="wiz-top"><span id="wizStep"></span><button type="button" class="btn" id="wizX">Abbrechen</button></div>
+  <div class="wiz-bar"><i id="wizBar"></i></div>
+  <div class="wiz-q" id="wizFrage"></div>
+  <p class="wiz-help" id="wizHelp"></p>
+  <div id="wizBody" style="display:flex;flex-direction:column;gap:12px"></div>
+  <div class="status ok" id="wizInfo"></div>
+  <div class="wiz-nav"><button type="button" class="btn" id="wizBack">Zurück</button><button type="button" class="btn primary" id="wizNext">Weiter</button></div>
+</div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+// ---------- Startwerte (Beispielwerte) ----------
+const DEFAULTS = {
+  hauswert:400000, schenkMarcus:100000, schenkSandra:100000, cashWunsch:80000,
+  zinsAnja:2.00, kreditMarcus:50000, rateMarcus:300, zinsfreiMarcus:0, startMonMarcus:0, startRateMarcus:0, budgetMarcus:1800,
+  kreditSandra:50000, rateSandra:300, zinsfreiSandra:0, abrufSandra:3, zinsTagesgeld:2.00, zinsbindung:10, nebenkosten:2.0, nkBank:false,
+  pausch:1000,
+  topzins:{5:4.05,10:4.05,15:4.20,20:4.30,25:4.45,30:4.55},
+  stufen:[{bis:60,label:"bis 60 % = Bestzins",auf:0},{bis:70,label:"bis 70 %",auf:0.10},{bis:80,label:"bis 80 %",auf:0.20},
+          {bis:90,label:"bis 90 %",auf:0.43},{bis:100,label:"bis 100 %",auf:0.65},{bis:999,label:"über 100 %",auf:1.15}],
+  indiv:0, angebotKombi:"", angebotVoll:"",
+  anschlussAktiv:false, anschlussZins:5.00, stAuto:true, bankrate:"", mindestAnja:"", freiSonder:true,
+  stKombiBank:Array(30).fill(0), stKombiAnja:Array(30).fill(0), stVoll:Array(30).fill(0), stSandra:Array(30).fill(0)
+};
+const SZ_KEYS = ["hauswert","schenkMarcus","schenkSandra","cashWunsch","zinsAnja","kreditMarcus","rateMarcus","startMonMarcus","startRateMarcus","zinsfreiMarcus","budgetMarcus","kreditSandra","abrufSandra","rateSandra","zinsfreiSandra","zinsbindung"];
+const SZ_LABEL = {hauswert:["Hauswert","€"],schenkMarcus:["Erlass Sohn","€"],schenkSandra:["Ausgleich Tochter","€"],cashWunsch:["Cash-Wunsch Mutter","€"],zinsAnja:["Zins Privatkredit","%"],
+  kreditMarcus:["Kredit an den Sohn","€"],rateMarcus:["Rate Sohn an Mutter","€"],zinsfreiMarcus:["Zinsfrei Sohn","Mon."],budgetMarcus:["Budget Sohn","€"],
+  startMonMarcus:["Anfangsrate Sohn für","Mon."],startRateMarcus:["Anfangsrate Sohn","€"],
+  kreditSandra:["Kredit an die Tochter","€"],abrufSandra:["Tochter ruft ab nach","Mon."],rateSandra:["Rate Tochter an Mutter","€"],zinsfreiSandra:["Zinsfrei Tochter","Mon."],zinsbindung:["Zinsbindung","J."]};
+const SNAP_SKIP = ["szenarien","aktiv","topzins","stufen"];   // Marktzinsen gelten für alle Szenarien
+const snap = o => { const c=JSON.parse(JSON.stringify(o)); SNAP_SKIP.forEach(k=>delete c[k]); return c; };
+DEFAULTS.aktiv = 0;
+DEFAULTS.szenarien = [{name:"Ausgangslage", w:snap(DEFAULTS)}];
+const STORE_KEY = "familienfinanzierung.v2";
+const clone = o => JSON.parse(JSON.stringify(o));
+let S = clone(DEFAULTS);
+function syncAktiv(){ const z=S.szenarien && S.szenarien[S.aktiv]; if (z) z.w=snap(S); }
+function normalize(o, roh){
+  // ältere Stände: eigene Vollkredit-Sondertilgungen nicht stillschweigend überschreiben
+  if (roh && !("stAuto" in roh) && (roh.stVoll||[]).some(v=>+v>0)) o.stAuto=false;
+  if (!(+o.anschlussZins>=0)) o.anschlussZins = DEFAULTS.anschlussZins;
+  if (roh && !("nkBank" in roh) && +roh.nkFinanz>0) o.nkBank = true;   // früheres Betragsfeld
+  o.nkBank = !!o.nkBank; delete o.nkFinanz;
+  const basis = snap(o), keys = Object.keys(snap(DEFAULTS));
+  let sz = Array.isArray(o.szenarien) ? o.szenarien.filter(z=>z&&typeof z==="object"&&z.w&&typeof z.w==="object").slice(0,6) : [];
+  sz = sz.map(z=>{ const w=snap(basis); keys.forEach(k=>{ if (k in z.w) w[k]=JSON.parse(JSON.stringify(z.w[k])); }); return {name:String(z.name||"Szenario").slice(0,30), w}; });
+  let a = Number.isInteger(o.aktiv) && o.aktiv>=0 && o.aktiv<sz.length ? o.aktiv : -1;
+  if (!roh || !("aktiv" in roh)) a = sz.findIndex(z=>SZ_KEYS.every(k=>Math.abs((+o[k]||0)-(+z.w[k]||0))<1e-9));   // Stand ohne aktives Szenario
+  if (a>=0) sz[a].w = basis;                                         // die sichtbaren Eingaben gehören zum aktiven Szenario
+  else if (sz.length<6){ sz.push({name: sz.length ? "Eigene Eingaben" : "Ausgangslage", w:basis}); a=sz.length-1; }
+  else { a=0; Object.assign(o, JSON.parse(JSON.stringify(sz[0].w))); }
+  o.szenarien=sz; o.aktiv=a;
+  return o;
+}
+try { const raw = localStorage.getItem(STORE_KEY); if (raw){ const roh=JSON.parse(raw); S = normalize(Object.assign(clone(DEFAULTS), roh), roh); } } catch(e){}
+// Zinsupdate 13.11.2026: unveränderte alte Topzinsen (15–30 J.) durch neue Marktwerte ersetzen, eigene Werte bleiben
+{ const alt={15:4.35,20:4.55,25:4.75,30:4.75};
+  if (S.topzins) for (const b in alt) if (+S.topzins[b]===alt[b]) S.topzins[b]=DEFAULTS.topzins[b]; }
+function persist(){ syncAktiv(); try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} }
+
+// ---------- Format ----------
+const nz  = (v,d) => Math.abs(v) < 0.5/Math.pow(10,d) ? 0 : v;   // kein „-0“ anzeigen
+const fE  = (v,d=0) => new Intl.NumberFormat("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d}).format(nz(v,d)) + " €";
+const fN  = (v,d=0) => new Intl.NumberFormat("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d}).format(nz(v,d));
+const fP  = (v,d=2) => fN(v*100,d) + " %";
+const fJ  = v => fN(v,1).replace(",0","") + " J.";
+const parse = s => { if (s===""||s==null) return NaN; s=String(s).trim().replace(/\s|€|%/g,""); if (s.includes(",")) s=s.replace(/\./g,"").replace(",","."); else if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,""); return parseFloat(s); };
+const r2 = x => Math.round((x + Number.EPSILON) * 100) / 100;
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// ---------- Rechenkern (1:1 nach Excel) ----------
+function zinsInfo(kredit, hauswert){
+  const bind = S.zinsbindung;
+  const keys = Object.keys(S.topzins).map(Number).sort((a,b)=>a-b);
+  let k = keys.filter(x=>x<=bind).pop(); // XLOOKUP match -1
+  const top = (k===undefined ? S.topzins[10] : S.topzins[k]) / 100;
+  const bel = hauswert>0 ? kredit/hauswert : 0;
+  const st = S.stufen.slice().sort((a,b)=>a.bis-b.bis);
+  const idx = st.findIndex(s => bel <= s.bis/100 + 1e-12); // XLOOKUP match 1
+  const stufe = st[idx<0?st.length-1:idx];
+  const auf = stufe.auf/100;
+  const geschaetzt = top + auf + (S.indiv||0)/100;
+  let next = null, reduktion = 0, vorteil = 0;
+  if (bel > st[0].bis/100) {
+    const cands = st.filter(s => s.bis/100 < bel);
+    next = cands[cands.length-1];
+    reduktion = kredit - next.bis/100*hauswert;
+    vorteil = auf - next.auf/100;
+  }
+  return {bind, top, bel, stufe, auf, geschaetzt, next, reduktion, vorteil};
+}
+
+function compute(){
+  const C = {};
+  C.zA = S.zinsAnja/100;
+  C.anspruchAnja = S.hauswert - S.schenkMarcus - S.schenkSandra;
+  C.summeKredite = S.kreditMarcus + S.kreditSandra;
+  // Kredit der Tochter kommt auf Abruf: bis dahin bleibt das Geld bei Mutter
+  const ab = Math.min(359, Math.max(0, Math.round(+S.abrufSandra||0))); C.abruf = S.kreditSandra>0 ? ab : 0;
+  C.reserviert = C.abruf>0 ? S.kreditSandra : 0;                 // für die Tochter zurückgelegt
+  C.cashFrei = C.anspruchAnja - C.summeKredite;                  // frei verfügbar
+  C.cashAnja = C.cashFrei + C.reserviert;                        // bar bei der Übergabe
+  C.abweichung = C.cashFrei - S.cashWunsch;
+  C.kaufpreis = S.hauswert - S.schenkMarcus;
+  C.nebenkosten = S.hauswert * S.nebenkosten/100;
+  // Kaufnebenkosten: entweder ganz über die Bank mitfinanziert (in beiden Modellen) oder ganz bar
+  C.nkFin = S.nkBank ? Math.max(0, C.nebenkosten) : 0; C.nkBar = C.nebenkosten - C.nkFin;
+  C.bankVoll = C.kaufpreis + C.nkFin;                            // Bankkredit im Vollkredit-Modell
+  C.bankKombi = C.bankVoll - S.kreditMarcus;
+  C.rateBankKombi = S.budgetMarcus - S.rateMarcus;
+  C.auszahlungSandra = S.schenkSandra + (C.abruf>0 ? 0 : S.kreditSandra);   // bei der Übergabe
+  C.rueckflussMonat = S.rateMarcus + S.rateSandra;
+  // Vorgaben: feste Bankrate (von der Bank) und Mindestrate an Mutter
+  const br = parse(S.bankrate), mn = parse(S.mindestAnja);
+  C.bankrateFix = (!isNaN(br) && br>0) ? br : null;
+  C.mindestAnja = (!isNaN(mn) && mn>0) ? mn : 0;
+  C.rateAnjaOhneMin = C.bankrateFix!==null ? S.budgetMarcus - C.bankrateFix : S.rateMarcus;
+  C.rateAnjaSoll = Math.max(0, C.rateAnjaOhneMin, C.mindestAnja);
+  // Reduzierte Anfangsrate: in den ersten Monaten zahlt Sohn eine andere (kleinere) Rate an Mutter
+  C.startM = S.kreditMarcus>0 ? Math.min(360, Math.max(0, Math.round(+S.startMonMarcus||0))) : 0;
+  C.startRate = Math.max(0, +S.startRateMarcus||0);
+  // Anfangsrate 0 = Pause: Der Kredit ruht (keine Rate, keine Zinsen); die zinsfreie Zeit beginnt erst mit der ersten Rate
+  C.pauseM = C.startM>0 && C.startRate<=0 ? C.startM : 0;
+
+  C.ziK = zinsInfo(C.bankKombi, S.hauswert);
+  C.ziV = zinsInfo(C.bankVoll, S.hauswert);
+  const ak = parse(S.angebotKombi), av = parse(S.angebotVoll);
+  C.zinsKombi = isNaN(ak) ? C.ziK.geschaetzt : ak/100;
+  C.zinsVoll  = isNaN(av) ? C.ziV.geschaetzt : av/100;
+  C.herkunftK = isNaN(ak) ? "Schätzung" : "Bankangebot";
+  C.herkunftV = isNaN(av) ? "Schätzung" : "Bankangebot";
+
+  // Blatt 2: Kombi
+  const bindM = S.zinsbindung*12, an = S.anschlussAktiv ? (+S.anschlussZins||0)/100 : null;
+  C.anschluss = an; C.bindM = bindM;
+  const stV = S.stAuto ? S.stKombiBank.map((v,i)=>(+v||0)+(+S.stKombiAnja[i]||0)) : S.stVoll;
+  const K = []; let dB = Math.max(0,C.bankKombi), dA = Math.max(0,S.kreditMarcus);
+  const freiAn = C.bankrateFix!==null && !!S.freiSonder && S.kreditMarcus>0;   // frei werdende Rate an Mutter → jährliche Sondertilgung Bank
+  let pot = 0;
+  for (let m=1; m<=360; m++){
+    const y = Math.ceil(m/12);
+    const e = r2(dB*((an!==null&&m>bindM)?an:C.zinsKombi)/12);
+    const j = (m - C.pauseM) <= S.zinsfreiMarcus ? 0 : r2(dA*C.zA/12);
+    const inStart = m <= C.startM, ziel = inStart ? C.startRate : C.rateAnjaSoll;
+    // Deckt die Anfangsrate die Zinsen nicht, wird der Rest gestundet: Die Schuld bei Mutter wächst (k negativ)
+    const k = dA>0 ? (inStart && ziel < j ? ziel - j : Math.min(dA, Math.max(0, ziel - j))) : 0;
+    const f = dB>0 ? Math.min(dB, Math.max(0, (C.bankrateFix!==null ? C.bankrateFix : S.budgetMarcus - (j+k)) - e)) : 0;
+    if (freiAn) pot += Math.max(0, ziel - (j+k));
+    const g0 = m%12===0 ? Math.min(Math.max(0,dB-f), +S.stKombiBank[y-1]||0) : 0;
+    const gx = m%12===0 ? Math.min(Math.max(0,dB-f-g0), pot) : 0; if (m%12===0) pot = 0;
+    const g = g0 + gx;
+    const l = m%12===0 ? Math.min(Math.max(0,dA-k), +S.stKombiAnja[y-1]||0) : 0;
+    const h = Math.max(0, dB-f-g), mm = Math.max(0, dA-k-l);
+    K.push({m,y,dB,e,f,g,gx,h,dA,j,k,l,mm,n:h+mm,o:e+f+g+j+k+l});
+    dB=h; dA=mm;
+  }
+  C.K = K;
+  C.rateM = K[0].j + K[0].k;                       // tatsächliche Rate an Mutter im 1. Monat (0 ohne Kredit)
+  C.rateBankKombi = C.bankrateFix!==null ? K[0].e + K[0].f : S.budgetMarcus - C.rateM;
+  C.belastung = C.rateBankKombi + C.rateM;          // Monatsbelastung Kombi im 1. Monat
+  { const n = K[Math.min(359, C.startM)];           // erster Monat nach der Anfangszeit
+    C.rateMDanach = C.startM>0 ? n.j + n.k : C.rateM;
+    C.rateBankDanach = C.startM>0 ? n.e + n.f : C.rateBankKombi;
+    C.startStundung = K.reduce((s,r)=>s + (r.k<0 ? -r.k : 0), 0); }   // gestundete Zinsen, um die die Schuld wächst
+  C.kBankZins = K.reduce((s,r)=>s+r.e,0);
+  C.kAnjaZins = K.reduce((s,r)=>s+r.j,0);
+  C.kFreiSonder = K.reduce((s,r)=>s+r.gx,0);       // aus frei werdender Rate
+  C.kSonder = K.reduce((s,r)=>s+r.g+r.l,0) - C.kFreiSonder;   // nur die eingetragenen Sondertilgungen
+  C.freiAn = freiAn;
+  C.mFrei = K.filter(r=>r.dA>0.01).length/12;
+  C.kFrei = Math.max(K.filter(r=>r.dB>0.01).length, K.filter(r=>r.dA>0.01).length)/12;
+
+  // Blatt 3: Vollkredit
+  const V = []; let d = Math.max(0,C.bankVoll);
+  for (let m=1; m<=360; m++){
+    const y = Math.ceil(m/12);
+    const e = r2(d*((an!==null&&m>bindM)?an:C.zinsVoll)/12);
+    const f = d>0 ? Math.min(d, Math.max(0, S.budgetMarcus - e)) : 0;
+    const g = m%12===0 ? Math.min(Math.max(0,d-f), +stV[y-1]||0) : 0;
+    const h = Math.max(0,d-f-g);
+    V.push({m,y,d,e,f,g,h,i:e+f+g}); d=h;
+  }
+  C.V = V;
+  C.vZins = V.reduce((s,r)=>s+r.e,0);
+  C.vSonder = V.reduce((s,r)=>s+r.g,0);
+  C.vFrei = V.filter(r=>r.d>0.01).length/12;
+
+  // Blatt 4: Tochter
+  const SA = []; d = C.abruf>0 ? 0 : Math.max(0,S.kreditSandra);
+  for (let m=1; m<=360; m++){
+    const y = Math.ceil(m/12);
+    if (C.abruf>0 && m===C.abruf+1) d = Math.max(0,S.kreditSandra);   // Abruf: Kredit beginnt
+    const e = (m-C.abruf) <= S.zinsfreiSandra ? 0 : r2(d*C.zA/12);
+    const f = d>0 ? Math.min(d, Math.max(0, S.rateSandra - e)) : 0;
+    const g = m%12===0 ? Math.min(Math.max(0,d-f), +S.stSandra[y-1]||0) : 0;
+    const h = Math.max(0,d-f-g);
+    SA.push({m,y,d,e,f,g,h,i:e+f+g}); d=h;
+  }
+  C.SA = SA;
+  C.rateS = SA[C.abruf].e + SA[C.abruf].f;          // Die Rate der Tochter im 1. Monat nach Abruf
+  C.rueckflussMonat = C.rateM + (C.abruf>0 ? 0 : C.rateS);          // am Anfang
+  C.rueckflussSpaeter = K[C.abruf].j + K[C.abruf].k + C.rateS;      // ab Abruf der Tochter
+  C.sZins = SA.reduce((s,r)=>s+r.e,0);
+  C.sSonder = SA.reduce((s,r)=>s+r.g,0);
+  C.sFrei = SA.filter(r=>r.d>0.01).length/12;
+
+  // Vergleich
+  C.belV = S.hauswert>0 ? C.bankVoll/S.hauswert : 0; C.belK = S.hauswert>0 ? C.bankKombi/S.hauswert : 0;
+  C.restK = K[Math.min(359,bindM-1)].h; C.restV = V[Math.min(359,bindM-1)].h;
+  C.mischV = C.zinsVoll;
+  C.mischK = C.bankVoll>0 ? (C.bankKombi*C.zinsKombi + S.kreditMarcus*C.zA)/C.bankVoll : 0;
+  C.misch1K = C.bankVoll>0 ? (C.bankKombi*C.zinsKombi + S.kreditMarcus*((S.zinsfreiMarcus>0||C.pauseM>0)?0:C.zA))/C.bankVoll : 0;
+  C.zins1V = C.bankVoll*C.zinsVoll/12;
+  C.zins1K = C.bankKombi*C.zinsKombi/12 + S.kreditMarcus*((S.zinsfreiMarcus>0||C.pauseM>0)?0:C.zA)/12;
+  C.zinsGesV = C.vZins; C.zinsGesK = C.kBankZins + C.kAnjaZins;
+  // Tagesgeldzinsen auf das für die Tochter zurückgelegte Geld, bis sie abruft
+  const tgM = C.reserviert>0 ? r2(C.reserviert*(Math.max(0,+S.zinsTagesgeld||0)/100)/12) : 0;
+  C.tgZins = tgM * C.abruf;
+  C.zinsertragAnja = C.kAnjaZins + C.sZins + C.tgZins;
+  C.tilgAnja = K.reduce((s,r)=>s+r.k+r.l,0) + SA.reduce((s,r)=>s+r.f+r.g,0);   // tatsächlich zurückgezahlt in 30 Jahren
+  C.offenAnja = K[359].mm + SA[359].h;
+  C.lzK = K[359].n>0.01 ? "über 30 J." : fJ(C.kFrei); C.lzV = V[359].h>0.01 ? "über 30 J." : fJ(C.vFrei);
+  C.lzM = K[359].mm>0.01 ? "über 30 J." : fJ(C.mFrei); C.lzS = SA[359].h>0.01 ? "über 30 J." : fJ(C.sFrei);
+  C.gesamtRueckfluss = C.cashFrei + C.tilgAnja + C.zinsertragAnja;
+
+  // Blatt 5: Jahre
+  C.Y = [];
+  for (let y=1; y<=30; y++){
+    const kr = K.filter(r=>r.y===y), sr = SA.filter(r=>r.y===y);
+    const tg = tgM * Math.max(0, Math.min(12, C.abruf - (y-1)*12));
+    const zm = kr.reduce((s,r)=>s+r.j,0), zs = sr.reduce((s,r)=>s+r.e,0), J = zm+zs+tg;
+    const tilg = kr.reduce((s,r)=>s+r.k+r.l,0) + sr.reduce((s,r)=>s+r.f+r.g,0);
+    C.Y.push({y, voll:V[y*12-1].h, kombi:K[y*12-1].n, bankK:K[y*12-1].h, anjaM:K[y*12-1].mm, sandra:SA[y*12-1].h,
+              zm, zs, tg, J, frei:Math.min(S.pausch, J), cash:J+tilg, tilg});
+  }
+  C.steuerfrei = C.Y.reduce((s,r)=>s+r.frei,0);
+  C.zinsJahreSum = C.Y.reduce((s,r)=>s+r.J,0);
+  C.zinsJahre = C.Y.filter(r=>r.J>0.005).length;
+  C.zinsJahr1 = C.Y[0].J;
+  C.zinsJahrAvg = C.zinsJahre ? C.zinsJahreSum/C.zinsJahre : 0;
+
+  // Plausibilität der Eingaben
+  C.warn = [];
+  if (!(S.hauswert>0)) C.warn.push("Der Hauswert fehlt oder ist 0");
+  else {
+    if (C.kaufpreis<=0) C.warn.push("Der Erlass für den Sohn ist so hoch wie der Hauswert oder höher – es bleibt kein Kaufpreis");
+    else if (C.bankKombi<0) C.warn.push(`Der Privatkredit an den Sohn ist ${fE(-C.bankKombi)} höher als sein Kaufpreis`);
+    if (C.cashFrei<0) C.warn.push(`Schenkungen und Privatkredite sind zusammen ${fE(-C.cashFrei)} höher als der Hauswert – Mutter müsste Geld zuschießen`);
+  }
+  if (S.schenkMarcus>400000 || S.schenkSandra>400000) C.warn.push("Eine Schenkung liegt über dem Freibetrag von 400.000 € je Kind – Schenkungsteuer möglich");
+  if (S.kreditMarcus>0 && C.zA>C.zinsKombi+1e-9) C.warn.push(`Der Privatkredit ist mit ${fP(C.zA)} teurer als der Bankkredit (${fP(C.zinsKombi)}) – so lohnt er sich für den Sohn nicht`);
+  if (C.bankrateFix!==null && C.belastung > S.budgetMarcus + 0.005) C.warn.push(`Bankrate ${fE(C.rateBankKombi)} + Rate an Mutter ${fE(C.rateM)} = ${fE(C.belastung)} – das sind ${fE(C.belastung-S.budgetMarcus)} mehr als das Gesamtbudget vom Sohn`);
+  if (C.bankrateFix!==null && S.kreditMarcus>0 && C.rateAnjaSoll<=0) C.warn.push("Nach der Bankrate bleibt vom Budget nichts für die Rate an Mutter");
+  if (C.startM>0){
+    if (C.startStundung>0.005) C.warn.push(`Die Anfangsrate von ${fE(C.startRate)} deckt die Zinsen an Mutter nicht – die Schuld vom Sohn bei Mutter wächst in dieser Zeit um ${fE(C.startStundung,2)}`);
+    if (C.mindestAnja>0 && C.startRate < C.mindestAnja - 0.005) C.warn.push(`Die Anfangsrate von ${fE(C.startRate)} liegt unter Mutters Mindestrate von ${fE(C.mindestAnja)}`);
+    if (C.startRate > C.rateAnjaSoll + 0.005) C.warn.push(`Die Anfangsrate von ${fE(C.startRate)} ist höher als die normale Rate an Mutter (${fE(C.rateAnjaSoll)})`);
+  }
+  if (C.rateBankKombi<0) C.warn.push(`Die Rate an Mutter ist ${fE(-C.rateBankKombi)} höher als das Gesamtbudget vom Sohn`);
+  // Status
+  C.okRaten = (C.rateBankKombi > C.bankKombi*C.zinsKombi/12) && (S.budgetMarcus > C.bankVoll*C.zinsVoll/12) && (S.kreditMarcus===0 || C.rateAnjaSoll > S.kreditMarcus*C.zA/12);
+  C.okSonder = Math.abs(C.vSonder - C.kSonder) < 0.005;
+  C.ok30 = Math.max(V[359].h, K[359].n) <= 0.01;
+  C.okSandra = !(SA[359].h > 0.01 || (S.kreditSandra>0 && S.rateSandra <= S.kreditSandra*C.zA/12));
+  return C;
+}
+
+// ---------- Eingabefelder ----------
+const INPUTS = [
+  ["Haus & Schenkungen"],
+  ["hauswert","Immobilienwert (Haus von Mutter)","Vereinbarter Familienwert des Hauses","€"],
+  ["schenkMarcus","Schenkung / Kaufpreiserlass an den Sohn","Zählt bei der Bank als Eigenkapital","€"],
+  ["schenkSandra","Schenkung / Barauszahlung an die Tochter","Steuerfreies Gleichstellungsgeld","€"],
+  ["cashWunsch","Sofort-Cash-Wunsch Mutter","Barpuffer für Umzug, Anschaffungen, Tagesgeld/ETF","€"],
+  ["Privatkredite von Mutter"],
+  ["zinsAnja","Zinssatz Privatkredit Mutter","Einheitlich für beide Geschwister","%",0.05],
+  ["Sohn"],
+  ["kreditMarcus","Privatkredit Mutter an den Sohn","Verringert den Bankkredit","€"],
+  ["rateMarcus","Monatsrate Sohn an Mutter","Zins + Tilgung","€"],
+  ["startMonMarcus","Reduzierte Rate am Anfang für","0 = keine · danach gilt die normale Rate","Mon."],
+  ["startRateMarcus","Rate an Mutter in dieser Zeit","statt der normalen Rate · 0 = Pause ohne Rate und ohne Zinsen","€"],
+  ["zinsfreiMarcus","Zinsfreie Anfangszeit Sohn","z. B. 0, 12 oder 24 Monate · zählt ab der ersten Rate","Mon."],
+  ["budgetMarcus","Monatliches Gesamtbudget Sohn","Bank + Mutter","€"],
+  ["nebenkosten","Kaufnebenkosten (Notar & Grundbuch)","Üblich 1,5–2 %, keine Grunderwerbsteuer Eltern→Kind","%",0.1],
+  ["nkBank","Kaufnebenkosten über die Bank finanzieren","aus = Sohn zahlt sie bar · an = der Bankkredit steigt um diesen Betrag","","switch"],
+  ["zinsbindung","Zinsbindung Bankkredit","Bestimmt den geschätzten Topzins","J.","select"],
+  ["Tochter"],
+  ["kreditSandra","Privatkredit Mutter an die Tochter","Für ihren Hauskauf","€"],
+  ["rateSandra","Monatsrate Tochter an Mutter","Zins + Tilgung","€"],
+  ["abrufSandra","Tochter ruft den Kredit ab nach","0 = sofort · bis dahin bleibt das Geld bei Mutter","Mon."],
+  ["zinsTagesgeld","Zins fürs zurückgelegte Geld","Tagesgeld bei Mutter, bis Tochter abruft","%",0.05],
+  ["zinsfreiSandra","Zinsfreie Anfangszeit Tochter","z. B. 0, 12 oder 24 Monate, ab dem Abruf","Mon."],
+];
+function buildInputs(){
+  const el = document.getElementById("inputs");
+  el.innerHTML = `<div class="gs-title">Grundeinstellungen</div>` + INPUTS.map(row=>{
+    if (row.length===1) return `<div class="group-title">${row[0]}</div>`;
+    const [k,l,s,u,step] = row;
+    if (step==="switch") return `<div class="field swf"><label>${l}<small>${s}</small></label><button type="button" class="sw" data-sw="${k}" role="switch" aria-label="${l}"></button></div>`;
+    const ctrl = step==="select"
+      ? `<select data-k="${k}">${[5,10,15,20,25,30].map(v=>`<option value="${v}">${v} Jahre</option>`).join("")}</select>`
+      : `<input data-k="${k}" inputmode="decimal">`;
+    return `<div class="field"><label>${l}<small>${s}</small></label><div class="inp">${ctrl}${step==="select"?`<span aria-hidden="true">▾</span>`:`<span>${u}</span>`}</div></div>`;
+  }).join("") + `<div class="note" style="margin-top:10px">Bankzinsen werden automatisch aus Blatt „Zinsannahmen“ geschätzt. Tipp: Mit − / + (gedrückt halten = schneller) oder den Pfeiltasten ↑/↓ lassen sich Werte schrittweise ändern.</div>`;
+
+  document.getElementById("topzins").innerHTML = Object.keys(DEFAULTS.topzins).map(b=>
+    `<div class="field"><label>${b} Jahre Zinsbindung</label><div class="inp"><input data-tz="${b}" inputmode="decimal"><span>%</span></div></div>`).join("");
+  document.getElementById("stufen").innerHTML = S.stufen.map((s,i)=>
+    `<div class="field"><label>Beleihung ${s.label}</label><div class="inp"><input data-stufe="${i}" inputmode="decimal"><span>%-Pkt.</span></div></div>`).join("");
+
+  const stGrid = (id, keys, labels) => {
+    document.getElementById(id).innerHTML = Array.from({length:30},(_,y)=>
+      `<div><div class="yr">Jahr ${y+1}</div>${keys.map((k,i)=>`<div class="inp" style="margin-bottom:3px"><input data-st="${k}" data-y="${y}" inputmode="decimal" placeholder="0"><span>${labels[i]}</span></div>`).join("")}</div>`).join("");
+  };
+  stGrid("stKombi",["stKombiBank","stKombiAnja"],["Bank","Mutter"]);
+  stGrid("stVoll",["stVoll"],["€"]);
+  stGrid("stSandra",["stSandra"],["€"]);
+  // − / + an alle Einzelfelder (nicht an Auswahllisten und das Sondertilgungsraster)
+  addSteppers(document);
+}
+function addSteppers(root){
+  root.querySelectorAll(".field .inp").forEach(inp=>{
+    const i = inp.querySelector("input"); if (!i || inp.querySelector(".stp")) return;
+    const mk = (d,t,lbl) => { const b=document.createElement("button"); b.type="button"; b.className="stp"; b.dataset.d=d; b.textContent=t; b.setAttribute("aria-label",lbl); return b; };
+    inp.prepend(mk(-1,"−","Wert verringern")); inp.append(mk(1,"+","Wert erhöhen"));
+  });
+}
+// Schrittweite je Feld (gilt für Pfeiltasten und − / +)
+function stepInput(t, dir, big){
+  const k=t.dataset.k||t.dataset.szk; let step = STEP[k] ?? (t.dataset.st?500 : t.dataset.tz||t.dataset.stufe?0.05 : 1000);
+  if (big) step*=10;
+  let v = parse(t.value);
+  if (isNaN(v)) v = k==="angebotKombi" ? r2(C.zinsKombi*100) : k==="angebotVoll" ? r2(C.zinsVoll*100) : k==="bankrate" ? Math.round(C.rateBankKombi) : 0;
+  v = Math.round((v + dir*step)*1000)/1000; if (v<0 && k!=="indiv") v=0;
+  t.value = fN(v, DEC[k] ?? (t.dataset.tz||t.dataset.stufe?2:0));
+  t.dispatchEvent(new Event("input",{bubbles:true}));
+}
+// Gedrückt halten wiederholt; nach ~2 s große Schritte
+let rep=null;
+function stopRep(){ if(rep){ clearTimeout(rep.t); rep=null; } }
+document.addEventListener("pointerdown", e=>{
+  const b=e.target.closest(".stp"); if(!b) return; if (b.parentElement.querySelector("input").disabled){ e.preventDefault(); return; }
+  e.preventDefault(); stopRep();
+  const t=b.parentElement.querySelector("input"); const dir=+b.dataset.d; let n=0;
+  const tick=()=>{ stepInput(t, dir, n>=20); n++; rep={t:setTimeout(tick, n===1?420:90)}; };
+  tick();
+});
+["pointerup","pointercancel","pointerleave","blur"].forEach(ev=>document.addEventListener(ev, e=>{ if(ev!=="pointerleave"||e.target.closest?.(".stp")) stopRep(); }, true));
+document.addEventListener("click", e=>{ if(e.target.closest(".stp")) e.preventDefault(); });
+document.addEventListener("contextmenu", e=>{ if(e.target.closest(".stp")) e.preventDefault(); });
+const STEP = {zinsTagesgeld:0.05,bankrate:10,mindestAnja:25,anschlussZins:0.05,zinsbindung:5,zinsAnja:0.05,nebenkosten:0.1,zinsfreiMarcus:1,zinsfreiSandra:1,startMonMarcus:1,startRateMarcus:25,abrufSandra:6,indiv:0.05,angebotKombi:0.05,angebotVoll:0.05,pausch:100,rateMarcus:25,rateSandra:25,budgetMarcus:50};
+const DEC = {zinsTagesgeld:2,anschlussZins:2,zinsAnja:2,nebenkosten:1,indiv:2,angebotKombi:2,angebotVoll:2};
+function fmtIn(k,v){ if (typeof v==="string"){ v=parse(v); } if (v===""||v==null||(typeof v==="number"&&isNaN(v))) return ""; const d = DEC[k] ?? (Math.abs(v%1)>0?2:0); return fN(+v,d); }
+function fillInputs(){
+  document.querySelectorAll("[data-k]").forEach(el=>{ if (el===document.activeElement) return; el.value = el.tagName==="SELECT" ? S[el.dataset.k] : fmtIn(el.dataset.k, S[el.dataset.k]); });
+  document.querySelectorAll("[data-tz]").forEach(el=>{ if (el!==document.activeElement) el.value = fN(S.topzins[el.dataset.tz],2); });
+  document.querySelectorAll("[data-stufe]").forEach(el=>{ if (el!==document.activeElement) el.value = fN(S.stufen[el.dataset.stufe].auf,2); });
+  document.querySelectorAll("[data-st]").forEach(el=>{ if (el===document.activeElement) return; const v=+S[el.dataset.st][el.dataset.y]||0; el.value = v? fN(v,0):""; });
+  document.querySelectorAll("[data-szk]").forEach(el=>{ if (el===document.activeElement) return; const i=+el.dataset.sz; if(!S.szenarien[i]) return; const w=szSrc(i), k=el.dataset.szk; el.value = el.tagName==="SELECT" ? w[k] : fmtIn(k, w[k]); });
+  document.querySelectorAll("[data-szname]").forEach(el=>{ if (el===document.activeElement) return; const z=S.szenarien[el.dataset.szname]; if(z) el.value=z.name; });
+  document.querySelectorAll("[data-sw]").forEach(el=>el.setAttribute("aria-checked", String(!!S[el.dataset.sw])));
+  // Rate an Mutter ergibt sich automatisch, sobald eine feste Bankrate eingetragen ist
+  const rm = document.querySelector('#inputs [data-k="rateMarcus"]');
+  if (rm && C){ const auto = C.bankrateFix!==null, f = rm.closest(".field"), sm = f.querySelector("small");
+    if (!sm.dataset.orig) sm.dataset.orig = sm.textContent;
+    rm.disabled = auto; f.classList.toggle("auto", auto);
+    sm.textContent = auto ? "ergibt sich: Budget − feste Bankrate" + (C.mindestAnja>C.rateAnjaOhneMin ? ", mindestens Mutters Mindestrate" : "") : sm.dataset.orig + (C.mindestAnja>S.rateMarcus ? ` – es gilt die Mindestrate ${fE(C.mindestAnja)}` : "");
+    if (auto) rm.value = fmtIn("rateMarcus", Math.round(C.rateAnjaSoll*100)/100); }
+  // Die Anfangsrate zählt nur, wenn Monate eingetragen sind
+  { const sr = document.querySelector('#inputs [data-k="startRateMarcus"]'); if (sr && C) sr.closest(".field").classList.toggle("off", !(C.startM>0)); }
+}
+document.addEventListener("input", e=>{
+  const t = e.target; let changed = false;
+  if (t.dataset.k){ const k=t.dataset.k;
+    if (k==="angebotKombi"||k==="angebotVoll"||k==="bankrate"||k==="mindestAnja"){ S[k] = t.value.trim()==="" ? "" : t.value; changed=true; }
+    else { const v = t.tagName==="SELECT" ? +t.value : parse(t.value); if (!isNaN(v)){ S[k]= (v<0 && k!=="indiv") ? 0 : v; changed=true; } }
+  } else if (t.dataset.tz){ const v=parse(t.value); if(!isNaN(v)){ S.topzins[t.dataset.tz]=v; changed=true; } }
+  else if (t.dataset.stufe){ const v=parse(t.value); if(!isNaN(v)){ S.stufen[t.dataset.stufe].auf=v; changed=true; } }
+  else if (t.dataset.st){ const v=t.value.trim()===""?0:parse(t.value); if(!isNaN(v)){ S[t.dataset.st][t.dataset.y]=Math.max(0,v); changed=true; } }
+  else if (t.dataset.szname!==undefined){ const z=S.szenarien[t.dataset.szname]; if(z){ z.name=t.value.slice(0,30); persist(); renderSz(); } return; }
+  else if (t.dataset.szk){ const i=+t.dataset.sz, z=S.szenarien[i]; const v = t.tagName==="SELECT" ? +t.value : parse(t.value); if(z && !isNaN(v)){ const x=Math.max(0,v); if (i===S.aktiv) S[t.dataset.szk]=x; else z.w[t.dataset.szk]=x; changed=true; } }
+  if (changed){ persist(); render(); }
+});
+document.addEventListener("change", e=>{ if (e.target.matches("input")) { e.target.blur(); fillInputs(); } });
+document.addEventListener("keydown", e=>{
+  const t=e.target; if (!t.matches("input[data-k],input[data-st],input[data-tz],input[data-stufe],input[data-szk],input[data-szname]")) return;
+  if (e.key==="Enter"){ e.preventDefault(); t.blur(); return; }   // „Fertig“/Return schließt die Tastatur
+  if (e.key!=="ArrowUp"&&e.key!=="ArrowDown" || t.dataset.szname!==undefined) return;
+  e.preventDefault();
+  stepInput(t, e.key==="ArrowUp"?1:-1, e.shiftKey);
+});
+// Beim Antippen eines Feldes den ganzen Wert markieren – so ersetzt man ihn direkt
+let selNext=null;
+function selAll(t){ if (document.activeElement!==t) return; try{ t.setSelectionRange(0, t.value.length); }catch(_){ try{ t.select(); }catch(__){} } }
+document.addEventListener("focusin", e=>{ const t=e.target; if (!(t.matches && t.matches(".inp input"))) return;
+  const v0=t.value; selNext=t; setTimeout(()=>{ if (t.value===v0) selAll(t); },0);
+  setTimeout(()=>{ if (selNext===t && t.value===v0 && t.selectionStart===t.selectionEnd) selAll(t); selNext=null; },120); });   // falls der Tipp die Markierung wieder aufgehoben hat
+document.addEventListener("mouseup", e=>{ if (e.target===selNext) e.preventDefault(); });
+
+// ---------- Rendering ----------
+const row = (cells, cls="") => `<tr class="${cls}">${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`;
+const head = cells => `<tr>${cells.map(c=>`<th>${c}</th>`).join("")}</tr>`;
+const frueher = (d,e) => Math.abs(d)<0.05 ? "gleich schnell" : d>0 ? `${fN(d,1)} ${e} früher` : `${fN(-d,1)} ${e} später`;
+const signE = v => `<span class="${v>0.005?"pos":v<-0.005?"neg":""}">${v>0.005?"+":""}${fE(v)}</span>`;
+const kpi = (l,v,d="",cls="") => `<div class="kpi ${cls}"><div class="l">${l}</div><div class="v">${v}</div>${d?`<div class="d">${d}</div>`:""}</div>`;
+const status = (ok, okText, warnText) => `<div class="status ${ok?"ok":"warn"}">${ok?"✓ "+okText:"⚠ "+warnText}</div>`;
+
+const views = {kombi:"y", voll:"y", sandra:"y"};
+let C;
+function render(){
+  C = compute();
+  // KPIs
+  // Übersicht: Mutter
+  const zf = (S.zinsfreiMarcus>0||S.zinsfreiSandra>0||C.pauseM>0);
+  const goBtn = (tab,txt) => `<button class="golink" data-go="${tab}">${txt} →</button>`;
+  document.getElementById("boxAnja").innerHTML =
+    `<div class="wh"><b>Mutter</b><span>verkauft das Haus, verleiht einen Teil</span></div>
+     <div class="big"><div class="l">Bargeld bei Übergabe</div><div class="v">${fE(C.cashAnja)}</div>
+       <div class="d">${C.reserviert>0 ? `davon ${fE(C.reserviert)} für den Kredit der Tochter zurückgelegt · frei ${fE(C.cashFrei)} · ` : ""}Wunsch ${fE(S.cashWunsch)} · ${C.abweichung>=0?"+":"−"}${fE(Math.abs(C.abweichung))} ${C.abweichung>=0?"mehr":"weniger"}</div></div>
+     <dl>
+       <dt>Anteil am Hauswert<small>${fE(S.hauswert)} − Erlass Sohn − Ausgleich Tochter</small></dt><dd>${fE(C.anspruchAnja)}</dd>
+       <dt>davon verliehen<small>${fE(S.kreditMarcus)} an den Sohn sofort, ${fE(S.kreditSandra)} an die Tochter ${C.abruf>0?"auf Abruf":"sofort"}, zu ${fP(C.zA)}</small></dt><dd>${fE(C.summeKredite)}</dd>
+       <dt>Monatliche Rückzahlung<small>${C.abruf>0 ? `am Anfang nur Sohn · ab Abruf der Tochter (nach ${fN(C.abruf)} Mon.) + ${fE(C.rateS)}` : `${fE(C.rateM)} Sohn + ${fE(C.rateS)} Tochter`}</small></dt><dd>${fE(C.rueckflussMonat)}${C.abruf>0 ? `<small>${C.startM>C.abruf ? `dann ${fE(C.rueckflussSpaeter)}, später ${fE(C.rateMDanach+C.rateS)}` : `später ${fE(C.rueckflussSpaeter)}`}</small>` : ""}</dd>
+       ${C.startM>0 ? `<dt>${C.pauseM>0 ? "Sohn zahlt erst später" : "Sohn zahlt am Anfang weniger"}<small>${C.pauseM>0 ? `${fN(C.startM)} Monate Pause ohne Zinsen, danach ${fE(C.rateMDanach)}` : `die ersten ${fN(C.startM)} Monate ${fE(C.rateM)}, danach ${fE(C.rateMDanach)}`}</small></dt><dd>${fE(C.rateM)}<small>danach ${fE(C.rateMDanach)}</small></dd>` : ""}
+       <dt>Zinsen im 1. Jahr<small>${zf?"inkl. zinsfreier Monate":C.abruf>0?`Tochter zahlt erst ab dem Abruf${C.Y[0].tg>0.005 ? ", bis dahin "+fE(C.Y[0].tg)+" Tagesgeld" : ""}`:C.Y[1].J<C.Y[0].J-0.005?"danach jedes Jahr etwas weniger":"bleibt gleich, solange nicht getilgt wird"}</small></dt><dd>${fE(C.zinsJahr1)}<small>≈ ${fE(C.zinsJahr1/12)} / Monat</small></dd>
+       <dt>Zinsen Ø pro Jahr<small>über ${C.zinsJahre} Jahre</small></dt><dd>${fE(C.zinsJahrAvg)}</dd>
+       <dt>Zinsen insgesamt<small>${C.tgZins>0.005 ? `davon ${fE(C.tgZins)} Tagesgeld bis zum Abruf · ` : ""}steuerfrei ca. ${fE(C.steuerfrei)}</small></dt><dd>${fE(C.zinsertragAnja)}</dd>
+       <dt>Alles zurückgezahlt nach<small>Sohn ${C.lzM}, Tochter ${C.lzS}${C.abruf>0?" ab ihrem Abruf":""}</small></dt><dd>${C.offenAnja>0.01?"über 30 J.":fJ(Math.max(C.mFrei, C.abruf/12 + C.sFrei))}</dd>
+       <dt>Auszahlung an die Tochter bei Übergabe<small>${C.abruf>0 ? `Ausgleich · der Kredit von ${fE(S.kreditSandra)} folgt auf Abruf` : `${fE(S.schenkSandra)} Ausgleich + ${fE(S.kreditSandra)} Kredit`}</small></dt><dd>${fE(C.auszahlungSandra)}</dd>
+     </dl>${goBtn("anja","Details Mutter & Steuer")}`;
+
+  // Übersicht: Sohn
+  const sp = C.zinsGesV-C.zinsGesK;
+  document.getElementById("boxMarcus").innerHTML =
+    `<div class="wh"><b>Sohn</b><span>kauft das Haus (Kombi-Modell)</span></div>
+     <div class="big"><div class="l">Monatliche Belastung</div><div class="v">${fE(C.belastung)}</div>
+       <div class="d">${fE(C.rateBankKombi)} Bank${C.bankrateFix!==null?" (fest)":""} + ${fE(C.rateM)} an Mutter</div></div>
+     <dl>
+       <dt>Kaufpreis<small>Hauswert ${fE(S.hauswert)} − Erlass ${fE(S.schenkMarcus)}</small></dt><dd>${fE(C.kaufpreis)}</dd>
+       <dt>Bankkredit<small>Beleihung ${fP(C.belK,1)}, Zinsbindung ${S.zinsbindung} J. (${C.herkunftK})${C.nkFin>0.005?`, inkl. ${fE(C.nkFin)} Nebenkosten`:""}</small></dt><dd>${fE(C.bankKombi)}<small>${fP(C.zinsKombi)}</small></dd>
+       <dt>Privatkredit von Mutter<small>${S.zinsfreiMarcus>0?fN(S.zinsfreiMarcus)+" Monate zinsfrei"+(C.pauseM>0?" ab der ersten Rate":""):"fester Zins"}</small></dt><dd>${fE(S.kreditMarcus)}<small>${fP(C.zA)}</small></dd>
+       ${C.startM>0 ? `<dt>Rate an Mutter am Anfang<small>${C.pauseM>0 ? `${fN(C.startM)} Monate Pause ohne Zinsen` : `die ersten ${fN(C.startM)} Monate`} · danach ${fE(C.rateBankDanach)} Bank + ${fE(C.rateMDanach)} an Mutter</small></dt><dd>${fE(C.rateM)}<small>danach ${fE(C.rateMDanach)}</small></dd>` : ""}
+       <dt>Kaufnebenkosten<small>${C.nkFin>0.005 ? "über die Bank mitfinanziert" : "bar aus Eigenmitteln"}</small></dt><dd>${fE(C.nebenkosten)}</dd>
+       ${C.anschluss!==null && S.zinsbindung<30 ? `<dt>Anschlusszins ab Jahr ${S.zinsbindung+1}<small>Restschuld Bank dann ${fE(C.restK)}</small></dt><dd>${fP(C.anschluss)}</dd>` : ""}
+       <dt>Schuldenfrei nach<small>${C.ok30 ? frueher(C.vFrei-C.kFrei,"Jahre")+(Math.abs(C.vFrei-C.kFrei)<0.05?" wie":" als")+" mit Vollkredit" : "in 30 Jahren nicht getilgt"}</small></dt><dd>${C.lzK}</dd>
+       <dt>Zinsen insgesamt<small>Bank + Mutter</small></dt><dd>${fE(C.zinsGesK)}</dd>
+       <dt>${sp>=0?"Ersparnis":"Mehrkosten"} ggü. Vollkredit<small>Vollkredit: ${fE(C.bankVoll)} zu ${fP(C.zinsVoll)}</small></dt><dd class="${sp>0?"good":sp<0?"bad":""}">${fE(Math.abs(sp))}</dd>
+     </dl>${goBtn("marcus","Vergleich Vollkredit / Kombi")}`;
+
+  // Übersicht: Prüfungen
+  const checks = [[C.okRaten,"Eine Rate deckt die Zinsen nicht – Budget bzw. Rate an Mutter erhöhen"],
+    [C.okSonder,"Unterschiedliche Sondertilgungen – Vergleich Kombi/Vollkredit nicht 1:1"],
+    [C.ok30,"Sohn hat nach 30 Jahren noch Restschuld"],[C.okSandra,"Rate Tochter zu niedrig bzw. Restschuld nach 30 Jahren"]].filter(c=>!c[0]);
+  const alle = [...C.warn, ...checks.map(c=>c[1])];
+  document.getElementById("ovStatus").innerHTML = alle.length ? alle.map(t=>status(false,"",t)).join("") : status(true,"Alle Prüfungen in Ordnung: Eingaben plausibel, Raten decken die Zinsen, alles in 30 Jahren abbezahlt","");
+
+  // Übersicht: Tochter (10)
+  document.getElementById("boxSandra").innerHTML =
+    `<div class="wh"><b>Tochter</b><span>bekommt den Ausgleich sofort, den Kredit auf Abruf</span></div>
+     <div class="big"><div class="l">Erhält bei Übergabe</div><div class="v">${fE(C.auszahlungSandra)}</div>
+       <div class="d">${C.abruf>0 ? `Ausgleich · dazu ${fE(S.kreditSandra)} Kredit von Mutter auf Abruf` : `${fE(S.schenkSandra)} Ausgleich + ${fE(S.kreditSandra)} Kredit von Mutter`}</div></div>
+     <dl>
+       <dt>Privatkredit von Mutter<small>${C.abruf>0 ? `auf Abruf, angenommen nach ${fN(C.abruf)} Monaten` : "sofort bei der Übergabe"}${S.zinsfreiSandra>0?", "+fN(S.zinsfreiSandra)+" Monate zinsfrei":""}</small></dt><dd>${fE(S.kreditSandra)}<small>${fP(C.zA)}</small></dd>
+       <dt>Monatsrate an Mutter<small>${S.kreditSandra>0?(C.abruf>0?"ab dem Abruf, Zins + Tilgung":"Zins + Tilgung"):"kein Kredit"}</small></dt><dd>${fE(C.rateS)}</dd>
+       <dt>Zinsen insgesamt<small>an Mutter</small></dt><dd>${fE(C.sZins)}</dd>
+       <dt>Schuldenfrei nach<small>${C.abruf>0?"gerechnet ab dem Abruf":C.sSonder>0?"inkl. Sondertilgungen":"ohne Sondertilgungen"}</small></dt><dd>${C.lzS}</dd>
+     </dl>${goBtn("sandra","Details Tochter")}`;
+
+  // Schalter-abhängige Bereiche (3, 8)
+  document.getElementById("fAnschluss").classList.toggle("off", !S.anschlussAktiv);
+  document.getElementById("fFreiSonder").classList.toggle("off", C.bankrateFix===null);
+  document.getElementById("stVollManual").hidden = !!S.stAuto;
+  { const su = S.stKombiBank.reduce((a,v,i)=>a+(+v||0)+(+S.stKombiAnja[i]||0),0);
+    document.getElementById("stAutoNote").textContent = S.stAuto ? (su>0 ? `Übernommen aus dem Kombi-Plan: ${fE(su)} über die Laufzeit.` : "Im Kombi-Plan sind noch keine Sondertilgungen eingetragen.") : "Eigene Werte für den Vollkredit:"; }
+  renderSz();
+
+  // Sohn-Reiter
+  document.getElementById("kpis").innerHTML =
+    kpi(sp>=0?"Zinsersparnis (Kombi)":"Mehrkosten (Kombi)", fE(Math.abs(sp)), "Bank + Mutter ggü. Vollkredit", sp>0?"good":sp<0?"bad":"") +
+    kpi("Schuldenfrei Kombi / Voll", `${C.lzK} / ${C.lzV}`, C.ok30 ? frueher(C.vFrei-C.kFrei, "Jahre") : "nicht in 30 Jahren getilgt") +
+    kpi("Mischzins Kombi / Voll", `${fP(C.mischK)} / ${fP(C.mischV)}`, "Bank und Mutter gewichtet") +
+    (Math.abs(C.belastung-S.budgetMarcus)<0.005
+      ? kpi("Monatsbelastung", fE(S.budgetMarcus), C.bankrateFix!==null && !C.freiAn ? `Kombi später nur noch ${fE(C.bankrateFix)} Bankrate` : "in beiden Modellen gleich")
+      : kpi("Monatsbelastung Kombi / Voll", `${fE(C.belastung)} / ${fE(S.budgetMarcus)}`, "nicht gleich – Vergleich nur eingeschränkt", "bad"));
+  // Zinsannahmen: Ergebnis der Raten-Vorgaben
+  { const ohne = Math.max(0, C.rateAnjaOhneMin), minGreift = C.mindestAnja > ohne + 0.005 && S.kreditMarcus>0;
+    const zeile = `${fE(C.rateBankKombi)} Bank + ${fE(C.rateM)} an Mutter = ${fE(C.belastung)} im Monat`;
+    document.getElementById("rateNote").innerHTML =
+      (C.bankrateFix===null && !C.mindestAnja ? `<p class="note" style="margin:0">Keine Vorgabe eingetragen. Aktuell: ${zeile}.</p>`
+        : status(C.belastung <= S.budgetMarcus + 0.005, `Daraus ergibt sich: ${zeile}.` + (minGreift ? ` Mutters Mindestrate greift (sonst wären es ${fE(ohne)}).` : ""),
+            `Daraus ergibt sich: ${zeile}. Das sind ${fE(C.belastung-S.budgetMarcus)} mehr als das Gesamtbudget von ${fE(S.budgetMarcus)}.` + (minGreift ? " Mutters Mindestrate greift." : ""))) +
+      (C.bankrateFix!==null && S.kreditMarcus>0 ? `<p class="note" style="margin:6px 0 0">Die Rate an Mutter in den Grundeinstellungen wird jetzt automatisch berechnet. Ist Mutters Kredit getilgt (nach ${C.lzM}), ${C.freiAn ? `geht die frei werdende Rate einmal im Jahr als Sondertilgung an die Bank, insgesamt ${fE(C.kFreiSonder)}. Die Bank muss Sondertilgungen in dieser Höhe erlauben (üblich sind bis zu 5 % der Kreditsumme pro Jahr).` : "zahlt Sohn nur noch die Bankrate."}</p>` : ""); }
+
+  document.getElementById("tblAufteilung").innerHTML = [
+    ["Rechnerischer Anspruch Mutter am Hauswert", fE(C.anspruchAnja)],
+    ["Summe vergebene Privatkredite (Sohn + Tochter)", fE(C.summeKredite)],
+    ["Bargeld für Mutter bei Übergabe", fE(C.cashAnja)],
+    ...(C.reserviert>0 ? [["davon für den Kredit der Tochter zurückgelegt (auf Abruf)", fE(C.reserviert)], ["Frei verfügbar für Mutter", fE(C.cashFrei)]] : []),
+    ["Abweichung zum Sofort-Cash-Wunsch", signE(C.abweichung)],
+    ["Barauszahlung an die Tochter bei Übergabe", fE(C.auszahlungSandra)],
+    ["Monatlicher Rückfluss an Mutter" + (C.abruf>0 ? " (am Anfang / ab Abruf der Tochter)" : ""), C.abruf>0 ? `${fE(C.rueckflussMonat)} / ${fE(C.rueckflussSpaeter)}` : fE(C.rueckflussMonat)],
+  ].map(r=>row(r)).join("");
+
+  const tip = C.ziK.next ? `Tipp: ${fE(C.ziK.reduktion)} weniger Bankkredit → ${fN(C.ziK.vorteil*100,2)} %-Pkt. günstiger (nur wenn die Bank den vollen Hauswert ansetzt)` : "✓ Bestzins-Stufe erreicht";
+  document.getElementById("tblVergleich").innerHTML = head(["Kennzahl","A: Vollkredit","B: Kombi","Vorteil Kombi"]) + [
+    ["Kredit & Zins"],
+    ["Bankkredit", fE(C.bankVoll), fE(C.bankKombi), signE(C.bankVoll-C.bankKombi)],
+    ["Beleihungsauslauf", fP(C.belV,1), fP(C.belK,1), fN((C.belV-C.belK)*100,1)+" %-Pkt."],
+    ["Bankzins (" + C.herkunftV + " / " + C.herkunftK + ")", fP(C.zinsVoll), fP(C.zinsKombi), fN((C.zinsVoll-C.zinsKombi)*100,2)+" %-Pkt."],
+    ...(C.nkFin>0.005 ? [["davon mitfinanzierte Kaufnebenkosten", fE(C.nkFin), fE(C.nkFin), ""]] : []),
+    ["Privatkredit von Mutter", fE(0), fE(S.kreditMarcus), ""],
+    ["Effektiver Mischzins (regulär)", fP(C.mischV), fP(C.mischK), fN((C.mischV-C.mischK)*100,2)+" %-Pkt."],
+    ["Mischzins im 1. Monat (inkl. 0 %-Start)", fP(C.mischV), fP(C.misch1K), fN((C.mischV-C.misch1K)*100,2)+" %-Pkt."],
+    ["Jeden Monat"],
+    ["Monatsrate an die Bank (Start)", fE(S.budgetMarcus), fE(C.rateBankKombi), ""],
+    ["Monatsrate an Mutter (Start)", fE(0), fE(C.rateM), ""],
+    ...(C.startM>0 ? [[`Monatsrate an Mutter nach ${fN(C.startM)} Monaten`, fE(0), fE(C.rateMDanach), ""], [`Monatsrate an die Bank nach ${fN(C.startM)} Monaten`, fE(S.budgetMarcus), fE(C.rateBankDanach), ""]] : []),
+    ["Monatliche Gesamtbelastung", fE(S.budgetMarcus), fE(C.belastung), Math.abs(C.belastung-S.budgetMarcus)<0.005 ? "" : signE(S.budgetMarcus-C.belastung)],
+    ["davon Zinsen im 1. Monat", fE(C.zins1V,2), fE(C.zins1K,2), signE(C.zins1V-C.zins1K)],
+    ["davon Tilgung im 1. Monat", fE(S.budgetMarcus-C.zins1V,2), fE(C.belastung-C.zins1K,2), signE((C.belastung-C.zins1K)-(S.budgetMarcus-C.zins1V))],
+    ["Über die gesamte Laufzeit"],
+    [`Restschuld Bank nach ${S.zinsbindung} J. Zinsbindung`, fE(C.restV), fE(C.restK), signE(C.restV-C.restK)],
+    ...(C.anschluss!==null && S.zinsbindung<30 ? [[`Anschlusszins ab Jahr ${S.zinsbindung+1}`, fP(C.anschluss), fP(C.anschluss), ""]] : []),
+    ["Sondertilgungen gesamt", fE(C.vSonder), fE(C.kSonder), ""],
+    ...(C.kFreiSonder>0.005 ? [["Sondertilgung aus frei werdender Rate", "–", fE(C.kFreiSonder), ""]] : []),
+    ["Komplett schuldenfrei nach", C.lzV, C.lzK, C.ok30 ? frueher(C.vFrei-C.kFrei, "J.") : ""],
+    ["Gezahlte Zinsen an die Bank", fE(C.vZins), fE(C.kBankZins), signE(C.vZins-C.kBankZins)],
+    ["Gezahlte Zinsen an Mutter", fE(0), fE(C.kAnjaZins), signE(-C.kAnjaZins)],
+    ["Gesamtzinskosten Sohn", fE(C.zinsGesV), fE(C.zinsGesK), signE(C.zinsGesV-C.zinsGesK)],
+  ].map(r=>r.length===1 ? `<tr class="grp"><td colspan="4">${r[0]}</td></tr>` : row(r, r[0]==="Gesamtzinskosten Sohn"?"hl":"")).join("");
+  document.getElementById("noteAnschluss").textContent = C.anschluss!==null && S.zinsbindung<30
+    ? `Mit Anschlusszins gerechnet: ab Jahr ${S.zinsbindung+1} gilt für den Bankkredit ${fP(C.anschluss)} (einstellbar unter „Zinsannahmen“).`
+    : "Annahme: Der Bankzins bleibt nach Ende der Zinsbindung gleich. Unter „Zinsannahmen“ lässt sich ein Anschlusszins zuschalten.";
+
+  document.getElementById("statusBox").innerHTML =
+    `<div class="status ${C.ziK.next?"warn":"ok"}">${C.ziK.next?"💡 ":"✓ "}${tip.replace("✓ ","")}</div>` +
+    status(C.okRaten,"Alle Raten decken die laufenden Zinsen","Eine Rate deckt die Zinsen nicht – Budget bzw. Rate an Mutter erhöhen") +
+    status(C.okSonder,"Gleiche Sondertilgungen in beiden Modellen","Unterschiedliche Sondertilgungen – Vergleich nicht 1:1 (Kombi vs. Vollkredit)") +
+    status(C.ok30,"Beide Modelle in 30 Jahren abbezahlt","Nach 30 Jahren noch Restschuld – Ergebnisse unvollständig") +
+    (C.bankrateFix!==null && !C.freiAn && S.kreditMarcus>0 && C.mFrei<C.kFrei-0.05 ? status(false,"",`Vergleich nicht 1:1: Mit fester Bankrate zahlt Sohn im Kombi-Modell nach ${C.lzM} (Mutters Kredit getilgt) nur noch ${fE(C.bankrateFix)} im Monat, beim Vollkredit durchgehend ${fE(S.budgetMarcus)}. Deshalb läuft der Bankkredit länger und kostet mehr Zinsen.`) : "");
+
+  document.getElementById("tblSandra").innerHTML = [
+    ["Privatkredit an den Sohn (Startschuld)", fE(S.kreditMarcus)],
+    ...(C.startM>0 ? [["Reduzierte Anfangsrate Sohn", `${fN(C.startM)} Monate ${fE(C.rateM)}, danach ${fE(C.rateMDanach)}`]] : []),
+    ["Laufzeit / gezahlte Zinsen Sohn", `${C.lzM} / ${fE(C.kAnjaZins,2)}`],
+    ["Privatkredit an die Tochter (Startschuld)", fE(S.kreditSandra)],
+    ["Laufzeit / gezahlte Zinsen Tochter", `${C.lzS} / ${fE(C.sZins,2)}`],
+    ["Tochter ruft ihren Kredit ab", C.abruf>0 ? `nach ${fN(C.abruf)} Monaten` : "sofort bei der Übergabe"],
+    ["Zinsfreie Anfangszeit Sohn / Tochter", `${fN(S.zinsfreiMarcus)} / ${fN(S.zinsfreiSandra)} Monate`],
+    ...(C.tgZins>0.005 ? [[`Tagesgeldzinsen auf das zurückgelegte Geld (${fN(C.abruf)} Monate zu ${fN(S.zinsTagesgeld,2)} %)`, fE(C.tgZins,2)]] : []),
+    ["Gesamter Zinsertrag für Mutter", fE(C.zinsertragAnja,2)],
+    ["Zinsertrag Mutter im 1. Jahr / Ø pro Jahr", `${fE(C.zinsJahr1)} / ${fE(C.zinsJahrAvg)}`],
+    ["Gesamtrückfluss an Mutter (Sofort-Cash + Tilgung + Zins)", fE(C.gesamtRueckfluss,2)],
+  ].map(r=>row(r, /^Gesamt/.test(r[0])?"hl":"")).join("") + `<tr><td colspan="2" style="border:0">${status(C.offenAnja<=0.01,"Beide Privatkredite sind in 30 Jahren zurückgezahlt",`Nach 30 Jahren sind noch ${fE(C.offenAnja)} offen – im Gesamtrückfluss nicht enthalten`)}</td></tr>`;
+
+  lineChart("chartMain", [
+    {name:"Restschuld Sohn Vollkredit", color:"var(--c1)", data:[C.bankVoll, ...C.Y.map(r=>r.voll)]},
+    {name:"Restschuld Sohn Kombi (gesamt)", color:"var(--c2)", data:[C.bankKombi+S.kreditMarcus, ...C.Y.map(r=>r.kombi)]},
+    {name:"Restschuld Tochter bei Mutter", color:"var(--c3)", data:[C.abruf>0 ? 0 : S.kreditSandra, ...C.Y.map(r=>r.sandra)]},
+  ]);
+
+  // Kombi
+  document.getElementById("kpisKombi").innerHTML =
+    kpi("Startschuld Bank", fE(C.bankKombi), `Zins ${fP(C.zinsKombi)}`) + kpi("Startrate Bank", fE(C.rateBankKombi)) +
+    kpi("Summe Bankzinsen", fE(C.kBankZins)) + kpi("Startschuld Mutter", fE(S.kreditMarcus), `Zins ${fP(C.zA)}`) +
+    kpi("Summe Zinsen Mutter", fE(C.kAnjaZins)) + kpi("Gesamtzinsen Sohn", fE(C.zinsGesK)) +
+    kpi("Schuldenfrei nach", C.lzK) + kpi("Summe Sondertilgungen", fE(C.kSonder+C.kFreiSonder), C.kFreiSonder>0.005 ? `davon ${fE(C.kFreiSonder)} aus frei werdender Rate` : "");
+  planTable("tblKombi", views.kombi,
+    ["Monat","Jahr","Restschuld Bank (Start)","Zins Bank","Tilgung Bank","Sondertilg. Bank","Restschuld Bank (Ende)","Restschuld Mutter (Start)","Zins Mutter","Tilgung Mutter","Sondertilg. Mutter","Restschuld Mutter (Ende)","Gesamtschuld (Ende)","Gesamtleistung"],
+    C.K, r=>[r.m,r.y,r.dB,r.e,r.f,r.g,r.h,r.dA,r.j,r.k,r.l,r.mm,r.n,r.o], {start:[2,7], end:[6,11,12], sum:[3,4,5,8,9,10,13]});
+
+  // Voll
+  document.getElementById("kpisVoll").innerHTML =
+    kpi("Startschuld Vollkredit", fE(C.bankVoll), `Zins ${fP(C.zinsVoll)}`) + kpi("Monatsrate Bank", fE(S.budgetMarcus)) +
+    kpi("Schuldenfrei nach", fJ(C.vFrei)) + kpi("Summe Bankzinsen", fE(C.vZins)) + kpi("Summe Sondertilgungen", fE(C.vSonder));
+  planTable("tblVoll", views.voll, ["Monat","Jahr","Restschuld Start","Zinsanteil","Tilgung","Sondertilgung","Restschuld Ende","Gesamtleistung"],
+    C.V, r=>[r.m,r.y,r.d,r.e,r.f,r.g,r.h,r.i], {start:[2], end:[6], sum:[3,4,5,7]});
+
+  // Tochter
+  document.getElementById("kpisSandra").innerHTML =
+    kpi("Startschuld Tochter", fE(S.kreditSandra), C.abruf>0 ? `Abruf nach ${fN(C.abruf)} Monaten` : "sofort") + kpi("Monatsrate Tochter", fE(C.rateS)) +
+    kpi("Summe Zinsen an Mutter", fE(C.sZins,2)) + kpi("Schuldenfrei nach", fJ(C.sFrei)) +
+    kpi("Zinsfreie Monate", fN(S.zinsfreiSandra)) + kpi("Summe Sondertilgungen", fE(C.sSonder));
+  planTable("tblSandra2", views.sandra, ["Monat","Jahr","Restschuld (Start)","Zins an Mutter","Tilgung","Sondertilgung","Restschuld (Ende)","Gesamtleistung"],
+    C.SA, r=>[r.m,r.y,r.d,r.e,r.f,r.g,r.h,r.i], {start:[2], end:[6], sum:[3,4,5,7]});
+
+  // Mutter
+  const pctFrei = C.zinsJahreSum ? C.steuerfrei/C.zinsJahreSum : 0;
+  document.getElementById("kpisAnja").innerHTML =
+    kpi("Zinsen im 1. Jahr", fE(C.zinsJahr1), `≈ ${fE(C.zinsJahr1/12)} pro Monat`) +
+    kpi("Zinsen Ø pro Jahr", fE(C.zinsJahrAvg), `über ${C.zinsJahre} Jahre`) +
+    kpi("Zinsertrag gesamt", fE(C.zinsJahreSum)) + kpi("davon steuerfrei", fE(C.steuerfrei), fN(pctFrei*100,0)+" % durch Pauschbetrag gedeckt") +
+    kpi("steuerpflichtig (Anlage KAP)", fE(C.zinsJahreSum-C.steuerfrei), "25 % + Soli, ggf. weniger (Günstigerprüfung)") +
+    kpi("Monatlicher Rückfluss (Start)", fE(C.rueckflussMonat), C.abruf>0 ? `ab Abruf der Tochter ${fE(C.rueckflussSpaeter)}` : C.offenAnja>0.01?"länger als 30 Jahre":`bis ${fJ(Math.max(C.mFrei,C.sFrei))}`);
+  document.getElementById("tblAnja").innerHTML = head(["Jahr","Restschuld Vollkredit","Restschuld Kombi","Vorsprung Sohn","Sohn bei Mutter","Tochter bei Mutter","Zinsen Sohn","Zinsen Tochter",C.tgZins>0.005?"Zinsen gesamt (mit Tagesgeld)":"Zinsen gesamt",`Steuerfrei (${fE(S.pausch)})`,"Cashflow an Mutter"]) +
+    C.Y.map(r=>row([r.y,fE(r.voll),fE(r.kombi),fE(r.voll-r.kombi),fE(r.anjaM),fE(r.sandra),fE(r.zm,2),fE(r.zs,2),fE(r.J,2),fE(r.frei,2),fE(r.cash)])).join("") +
+    row(["Summe","","","","","",fE(C.kAnjaZins,2),fE(C.sZins,2),fE(C.zinsJahreSum,2),fE(C.steuerfrei,2),fE(C.Y.reduce((s,r)=>s+r.cash,0))],"hl");
+  const zy = C.Y.filter(r=>r.J>0.005);
+  document.getElementById("tblZinsAnja").innerHTML = head(["Jahr","vom Sohn","von der Tochter","Tagesgeld","Zinsen gesamt","pro Monat","steuerfrei","steuerpflichtig"]) +
+    zy.map(r=>row([r.y,fE(r.zm),fE(r.zs),r.tg>0.005?fE(r.tg):"–",fE(r.J),fE(r.J/12),fE(r.frei),fE(r.J-r.frei)])).join("") +
+    row(["Summe",fE(C.kAnjaZins),fE(C.sZins),fE(C.tgZins),fE(C.zinsJahreSum),"",fE(C.steuerfrei),fE(C.zinsJahreSum-C.steuerfrei)],"hl");
+  barChart("chartAnja", C.Y);
+
+  // Zins
+  const zr = (l,a,b)=>row([l,a,b]);
+  document.getElementById("tblZins").innerHTML = head(["Kennzahl","Kombi-Modell","Vollkredit"]) +
+    zr("Zinsbindung", S.zinsbindung+" Jahre", S.zinsbindung+" Jahre") +
+    zr("Topzins für diese Zinsbindung", fP(C.ziK.top), fP(C.ziV.top)) +
+    zr("Bankkredit", fE(C.bankKombi), fE(C.bankVoll)) +
+    zr("Immobilienwert", fE(S.hauswert), fE(S.hauswert)) +
+    zr("Beleihungsauslauf", fP(C.ziK.bel,1), fP(C.ziV.bel,1)) +
+    zr("Erkannte Beleihungsstufe", C.ziK.stufe.label, C.ziV.stufe.label) +
+    zr("Aufschlag für diese Stufe", fN(C.ziK.auf*100,2)+" %-Pkt.", fN(C.ziV.auf*100,2)+" %-Pkt.") +
+    zr("Geschätzter Zins", fP(C.ziK.geschaetzt), fP(C.ziV.geschaetzt)) +
+    `<tr class="hl">${["Verwendeter Zins",fP(C.zinsKombi),fP(C.zinsVoll)].map(c=>`<td>${c}</td>`).join("")}</tr>` +
+    zr("Herkunft", C.herkunftK, C.herkunftV) +
+    zr("Nächstbessere Stufe", C.ziK.next?C.ziK.next.label:"–", C.ziV.next?C.ziV.next.label:"–") +
+    zr("Dafür nötige Reduktion des Bankkredits", fE(C.ziK.reduktion), fE(C.ziV.reduktion)) +
+    zr("Zinsvorteil der nächstbesseren Stufe", fN(C.ziK.vorteil*100,2)+" %-Pkt.", fN(C.ziV.vorteil*100,2)+" %-Pkt.");
+
+  // Glossar
+  const anTxt = C.anschluss!==null && S.zinsbindung<30
+    ? `Eingeschaltet: ab Jahr ${S.zinsbindung+1} rechnet der Rechner mit ${fP(C.anschluss)}.`
+    : `Ausgeschaltet: der Rechner nimmt an, dass der Bankzins gleich bleibt. Unter „Zinsannahmen“ lässt sich ein anderer Wert zuschalten.`;
+  // Beispielrechnungen für das Glossar (mit den aktuellen Eingaben)
+  const gz0 = rechne({zinsfreiMarcus:0, zinsfreiSandra:0}), gz12 = rechne({zinsfreiMarcus:12, zinsfreiSandra:12});
+  const gzM = gz0.zinsGesK-gz12.zinsGesK, gzS = gz0.sZins-gz12.sZins, gzA = gz0.zinsertragAnja-gz12.zinsertragAnja;
+  const gp = rechne({zinsAnja:S.zinsAnja+0.5}), gpA = gp.zinsertragAnja-C.zinsertragAnja;
+  // Einordnung des Privatkredit-Zinses je nach Höhe
+  const GMLO = 2.3, GMHI = 2.4;   // Geldmarkt-ETF, Stand November 2026
+  const zP = S.zinsAnja, zB = C.zinsKombi*100;
+  const gebunden = " Ihr Geld ist dafür gebunden und kommt in Raten zurück.";
+  const gmTxt =
+    zP <= 0 ? "Bei 0 % ist der Kredit zinslos: Mutter bekommt ihr Geld vollständig zurück und verzichtet auf Zinsen. Das ist die größtmögliche Unterstützung für Sohn und Tochter." + gebunden
+    : zP > zB + 0.001 ? `Damit liegt er über dem Bankzins vom Sohn (${fP(C.zinsKombi)}). Der Privatkredit wäre für ihn teurer als ein Kredit bei der Bank – als Familienkredit ergibt das keinen Sinn.`
+    : zP >= zB - 0.25 ? `Damit liegt er fast auf dem Niveau der Bank (${fP(C.zinsKombi)}). Mutter bekommt deutlich mehr als am Geldmarkt, für Sohn und Tochter bleibt aber kaum noch eine Unterstützung.` + gebunden
+    : zP > GMHI + 0.001 ? `Damit liegt er zwischen Geldmarkt und Bankzins (${fP(C.zinsKombi)}): Mutter bekommt mehr als bei einer sicheren Anlage, und ihre Kinder zahlen trotzdem deutlich weniger als bei der Bank.` + gebunden
+    : zP >= GMLO - 0.001 ? "Damit liegt er auf dem Niveau des heutigen Geldmarkts: Mutter bekommt etwa so viel wie bei einer sicheren Anlage, und ihre Kinder zahlen deutlich weniger als bei der Bank. Dazu ist Mutters Zins fest vereinbart, während der Geldmarkt schwankt." + gebunden
+    : `Damit liegt er etwas unter dem heutigen Geldmarkt. Das ist gewollt: Mutter unterstützt ihre Kinder mit einem günstigen Zins und hat trotzdem einen festen, planbaren Ertrag. Der Geldmarkt schwankt mit dem Leitzins und lag schon jahrelang bei 0 %. Fällt er unter ${fN(zP,2)} %, steht Mutter mit dem Privatkredit sogar besser da.` + gebunden;
+  const euroTxt = zP > 0 && zP <= zB + 0.001 ? ` In Euro: ${fE(C.zinsJahr1)} Zinsen für Mutter im 1. Jahr, ${fE(C.zinsertragAnja)} insgesamt.` : "";
+  const plusTxt = zP <= 0 ? ` Schon ein halber Prozentpunkt brächte Mutter insgesamt rund ${fE(gpA)} Zinsen.`
+    : zP + 0.5 <= zB ? ` Ein halber Prozentpunkt mehr oder weniger verschiebt insgesamt rund ${fE(gpA)} zwischen Mutter und ihren Kindern.` : "";
+  const G = [
+    ["Aufteilung in der Familie"],
+    ["Kaufpreiserlass (gemischte Schenkung)", "Mutter verkauft das Haus an den Sohn unter Wert. Der erlassene Teil ist rechtlich eine Schenkung, der Rest ein normaler Kauf.",
+     `Hauswert ${fE(S.hauswert)} − Erlass ${fE(S.schenkMarcus)} = Kaufpreis ${fE(C.kaufpreis)}. Schenkungen von Eltern an Kinder sind bis 400.000 € je Kind steuerfrei, alle Schenkungen innerhalb von 10 Jahren zusammengerechnet.${S.schenkMarcus>400000?" Achtung: Der Erlass liegt über diesem Freibetrag.":""}`],
+    ["Ausgleich für die Tochter (Gleichstellungsgeld)", "Damit beide Geschwister gleich gestellt sind, bekommt Tochter den Vorteil vom Sohn in bar.",
+     `Tochter erhält ${fE(S.schenkSandra)}. Auch das ist eine Schenkung von Mutter mit demselben Freibetrag von 400.000 €. Geldschenkungen müssen dem Finanzamt innerhalb von drei Monaten gemeldet werden, auch wenn keine Steuer anfällt.`],
+    ["Sofort-Cash", "Das Geld, das Mutter am Tag der Übergabe tatsächlich bar behält – nach Erlass, Ausgleich und den vergebenen Privatkrediten.",
+     `Bei der Übergabe hat Mutter ${fE(C.cashAnja)}${C.reserviert>0 ? `, davon sind ${fE(C.reserviert)} für den Kredit der Tochter zurückgelegt. Frei verfügbar sind ${fE(C.cashFrei)}` : ""}, gewünscht sind ${fE(S.cashWunsch)}. Was Mutter verleiht (${fE(C.summeKredite)}), kommt über die Jahre mit Zinsen zurück.`],
+    ["Kaufnebenkosten", "Kosten für Notar und Grundbuch, üblich sind 1,5–2 % des Hauswerts. Grunderwerbsteuer fällt beim Verkauf von Eltern an Kinder nicht an.",
+     `Angesetzt sind ${fN(S.nebenkosten,1)} % = ${fE(C.nebenkosten)}, das ist eher vorsichtig gerechnet. ${C.nkFin>0.005 ? "Sie sind über die Bank mitfinanziert, der Bankkredit ist um diesen Betrag höher. Viele Banken finanzieren Nebenkosten nur mit Zinsaufschlag oder gar nicht mit." : "Sohn zahlt sie bar, sie stecken nicht im Kredit. Sollen sie über die Bank laufen, lässt sich das in den Grundeinstellungen einschalten."} Die genaue Höhe nennt der Notar.`],
+
+    ["Privatkredite von Mutter"],
+    ["Privatkredit (Familiendarlehen)", "Mutter leiht Sohn und Tochter Geld, statt es selbst anzulegen. Wichtig ist ein schriftlicher Vertrag mit Betrag, Zins, Rate, Laufzeit und Sicherheit – so, wie ihn auch Fremde schließen würden.",
+     `${fE(S.kreditMarcus)} an den Sohn und ${fE(S.kreditSandra)} an die Tochter, Rate ${fE(C.rateM)} bzw. ${fE(C.rateS)} im Monat.${C.zA<C.zinsKombi?" Weil der Zins unter dem liegt, was eine Bank verlangt, gilt der Zinsvorteil steuerlich als kleine zusätzliche Schenkung. Sie zählt zum Freibetrag von 400.000 € dazu.":""}`],
+    ["Kredit auf Abruf (Tochter)", "Sohn bekommt seinen Privatkredit sofort mit dem Hauskauf. Tochter bekommt ihren erst, wenn sie ihn braucht. Bis dahin bleibt das Geld bei Mutter. Zinsen und Raten beginnen erst mit dem Abruf.",
+     C.abruf>0 ? `Angenommen ist ein Abruf nach ${fN(C.abruf)} Monaten. Bis dahin bekommt Mutter nur die Rate vom Sohn (${fE(C.rateM)}), danach zusammen ${fE(C.rueckflussSpaeter)} im Monat. Die ${fE(S.kreditSandra)} hält Mutter bis dahin verfügbar, zum Beispiel auf einem Tagesgeldkonto. Bei ${fN(S.zinsTagesgeld,2)} % bringt das in dieser Zeit rund ${fE(C.tgZins)} Zinsen, die der Rechner bei Mutter mitzählt. Wann Tochter abruft, lässt sich in den Grundeinstellungen ändern.`
+       : `Aktuell ist „sofort“ eingestellt: Tochter bekommt ihren Kredit schon bei der Übergabe. In den Grundeinstellungen lässt sich ein späterer Abruf eintragen.`],
+    ["Zinssatz des Privatkredits", "Der feste Jahreszins, den Sohn und Tochter an ihre Mutter zahlen. Je niedriger er ist, desto stärker unterstützt Mutter ihre Kinder; je höher, desto mehr Ertrag hat sie selbst. Zur Orientierung dienen zwei Werte: der Geldmarkt (was Mutter sonst etwa bekäme) und der Bankzins (was die Kinder sonst zahlen müssten).",
+     `Aktuell ${fP(C.zA)}. Zum Vergleich: Ein Geldmarkt-ETF brachte im November 2026 rund 2,3–2,4 %, der Bankkredit vom Sohn kostet ${fP(C.zinsKombi)}. ${gmTxt}${euroTxt}${plusTxt}`],
+    ["Zinsfreie Anfangszeit", "Ein frei wählbarer Zeitraum zu Beginn, in dem Mutter keine Zinsen verlangt. Gerade am Anfang hilft das am meisten: Dann ist die Schuld am höchsten und damit auch der Zins. Die ganze Rate geht in die Rückzahlung, die Schuld sinkt schneller, und dadurch fallen auch später weniger Zinsen an.",
+     `Aktuell ${fN(S.zinsfreiMarcus)} Monate für den Sohn und ${fN(S.zinsfreiSandra)} für die Tochter. Beispiel mit 12 Monaten für beide: Sohn spart rund ${fE(gzM)} Zinsen (Bank + Mutter), Tochter rund ${fE(gzS)}. Mutter bekommt dafür ${fE(gzA)} weniger Zinsen – eine bewusste Starthilfe für ihre Kinder. Die Monatsrate bleibt gleich. Steuerlich zählt der Zinsverzicht als kleine zusätzliche Schenkung.`],
+    ["Reduzierte Anfangsrate (Sohn)", "Für eine frei wählbare Zahl von Monaten am Anfang zahlt Sohn eine kleinere Rate an Mutter, danach die normale. Das entlastet ihn in der Zeit direkt nach dem Kauf. Der Kredit läuft dafür etwas länger, und Mutter bekommt insgesamt etwas mehr Zinsen. Bei 0 € ruht der Kredit in dieser Zeit ganz: keine Rate und keine Zinsen. Eine zinsfreie Anfangszeit beginnt dann erst mit der ersten Rate. Ist die Anfangsrate größer als 0, aber kleiner als die Zinsen, wird der Rest gestundet und die Schuld wächst in dieser Zeit.",
+     C.startM>0 ? `Aktuell: die ersten ${fN(C.startM)} Monate ${fE(C.rateM)}, danach ${fE(C.rateMDanach)}. ${C.bankrateFix!==null ? "Mit fester Bankrate zahlt Sohn in dieser Zeit insgesamt weniger." : "Ohne feste Bankrate bleibt sein Gesamtbudget gleich: Was er Mutter weniger zahlt, geht in dieser Zeit an die Bank."} Im Vertrag sollten Dauer und Höhe der Anfangsrate stehen.` : "Aktuell nicht genutzt. Einstellbar in den Grundeinstellungen beim Sohn: „Reduzierte Rate am Anfang für … Monate“ und „Rate an Mutter in dieser Zeit“."],
+    ["Sondertilgung", "Eine freiwillige Extra-Zahlung zusätzlich zur Monatsrate. Sie senkt die Restschuld sofort und spart Zinsen.",
+     "Der Rechner verbucht sie im 12. Monat des jeweiligen Jahres. Bei der Bank muss das Recht dazu im Vertrag stehen, üblich sind bis zu 5 % der Kreditsumme pro Jahr. Bei Mutter ist es Vereinbarungssache."],
+
+    ["Bankkredit vom Sohn"],
+    ["Vollkredit und Kombi-Modell", "Zwei Wege für den Sohn: A – der ganze Kaufpreis kommt von der Bank. B (Kombi) – ein Teil kommt als Privatkredit von Mutter, der Rest von der Bank.",
+     `Vollkredit: ${fE(C.bankVoll)} zu ${fP(C.zinsVoll)}. Kombi: ${fE(C.bankKombi)} Bank zu ${fP(C.zinsKombi)} plus ${fE(S.kreditMarcus)} von Mutter zu ${fP(C.zA)}. ${Math.abs(C.belastung-S.budgetMarcus)<0.005 ? "Die Monatsbelastung ist in beiden Fällen "+fE(S.budgetMarcus)+"." : "Monatsbelastung: Vollkredit "+fE(S.budgetMarcus)+", Kombi "+fE(C.belastung)+"."}`],
+    ["Annuitätendarlehen, Tilgung, Restschuld", "Ein Kredit mit gleichbleibender Monatsrate. Die Rate besteht aus Zinsen und Tilgung (Rückzahlung). Was noch offen ist, heißt Restschuld.",
+     "Weil die Restschuld jeden Monat sinkt, wird der Zinsanteil der Rate kleiner und der Tilgungsanteil größer. Deshalb bekommt auch Mutter jedes Jahr etwas weniger Zinsen."],
+    ["Zinsbindung", "Der Zeitraum, für den die Bank den Zins fest zusagt. Längere Bindung gibt mehr Sicherheit, kostet aber meist einen höheren Zins.",
+     `Eingestellt sind ${S.zinsbindung} Jahre. Danach sind im Kombi-Modell noch ${fE(C.restK)} Bankkredit offen. Zehn Jahre nach der Auszahlung darf man einen Bankkredit mit 6 Monaten Frist kündigen, auch bei längerer Bindung.`],
+    ["Anschlusszins", "Der Zins für die Restschuld nach dem Ende der Zinsbindung. Er steht heute nicht fest und kann höher oder niedriger sein.", anTxt],
+    ["Beleihung und Beleihungswert", "Die Beleihung sagt, wie viel Prozent des Hauswerts die Bank finanziert. Je niedriger, desto günstiger der Zins. Die Bank rechnet dabei mit ihrem eigenen, vorsichtigen Beleihungswert, der oft 10–20 % unter dem Marktwert liegt.",
+     `Der Rechner rechnet mit dem vollen Hauswert: Kombi ${fP(C.ziK.bel,1)} → Stufe „${C.ziK.stufe.label}“. Setzt die Bank weniger an, steigt die Beleihung und der Zins kann eine Stufe teurer werden. Ob sie den Erlass als Eigenkapital anerkennt, entscheidet die Bank.`],
+    ["Topzins und Aufschlag", "So schätzt der Rechner den Bankzins: bester Marktzins für die gewählte Zinsbindung (Topzins) plus ein Aufschlag je nach Beleihung.",
+     `Kombi: ${fP(C.ziK.top)} + ${fN(C.ziK.auf*100,2)} Punkte = ${fP(C.ziK.geschaetzt)}. Echte Angebote liegen oft 0,1–0,3 Punkte darüber. Sobald ein Bankangebot vorliegt, kann es unter „Zinsannahmen“ eingetragen werden.`],
+    ["Mischzins", "Der Durchschnittszins vom Sohn aus Bankkredit und Privatkredit, gewichtet nach den Beträgen zu Beginn.",
+     `Kombi ca. ${fP(C.mischK)} statt ${fP(C.mischV)} beim Vollkredit. Über die ganze Laufzeit ${C.zinsGesV-C.zinsGesK>=0?"spart":"kostet"} das Kombi-Modell rund ${fE(Math.abs(C.zinsGesV-C.zinsGesK))} Zinsen.`],
+
+    ["Steuern auf Mutters Zinsen"],
+    ["Sparer-Pauschbetrag", "Der jährliche Freibetrag für Kapitalerträge: 1.000 € pro Person, 2.000 € für Ehepaare. Er gilt für alle Zinsen und Dividenden zusammen, nicht nur für die Privatkredite.",
+     `Angesetzt sind ${fE(S.pausch)} pro Jahr. Damit bleiben ca. ${fE(C.steuerfrei)} von ${fE(C.zinsJahreSum)} Zinsen (${fN(pctFrei*100,0)} %) steuerfrei. Hat Mutter weitere Zinsen, z. B. aus einem ETF, ist der freie Betrag kleiner.`],
+    ["Abgeltungsteuer und Anlage KAP", "Auf Zinsen über dem Pauschbetrag fallen 25 % Steuer plus Solidaritätszuschlag an, gegebenenfalls auch Kirchensteuer. Bei Privatkrediten behält niemand die Steuer ein: Mutter gibt die Zinsen selbst in der Steuererklärung (Anlage KAP) an.",
+     `Steuerpflichtig wären über die Laufzeit ca. ${fE(C.zinsJahreSum-C.steuerfrei)}. Liegt Mutters persönlicher Steuersatz unter 25 %, zahlt sie auf Antrag weniger (Günstigerprüfung). Sonderfall: Setzt ein Kreditnehmer die Zinsen selbst steuerlich ab, etwa bei vermieteten Objekten, kann eine andere Regel gelten – mit dem Steuerberater klären.`],
+  ];
+  document.getElementById("tblGlossar").innerHTML = head(["Begriff","Was das bedeutet","Bei uns"]) +
+    G.map(g=>g.length===1 ? `<tr class="grp"><td colspan="3">${esc(g[0])}</td></tr>` : `<tr><td><b>${esc(g[0])}</b></td><td>${esc(g[1])}</td><td>${esc(g[2])}</td></tr>`).join("");
+
+  fillInputs();
+  document.querySelectorAll("[data-stsum]").forEach(el=>{ const t=el.dataset.stsum.split(",").reduce((s,k)=>s+S[k].reduce((a,v)=>a+(+v||0),0),0); el.textContent = t>0 ? `(Summe ${fE(t)})` : "(noch keine)"; });
+}
+
+function planTable(id, view, cols, data, map, agg){
+  let rows;
+  if (view==="m"){
+    const last = data.reduce((a,r,i)=> map(r).slice(2).some(v=>v>0.005) ? i : a, 0);
+    rows = data.slice(0, Math.min(360, last+13)).map(r=>{ const v=map(r); return row(v.map((x,i)=>i<2?x:fE(x,2)), r.m%12===0?"yearend":""); });
+  } else {
+    rows = [];
+    for (let y=1;y<=30;y++){
+      const yr = data.filter(r=>r.y===y).map(map);
+      const v = cols.map((_,i)=> i===0 ? `${(y-1)*12+1}–${y*12}` : i===1 ? y :
+        agg.start.includes(i) ? yr[0][i] : agg.end.includes(i) ? yr[11][i] : yr.reduce((s,r)=>s+r[i],0));
+      if (y>1 && v.slice(2).every(x=>Math.abs(x)<0.005) && !data.some(r=>r.y>y && map(r).slice(2).some(x=>Math.abs(x)>0.005))) break;
+      rows.push(row(v.map((x,i)=>i<2?x:fE(x,2))));
+    }
+  }
+  document.getElementById(id).innerHTML = head(cols) + rows.join("");
+}
+
+// ---------- Charts (SVG, offline) ----------
+const tipEl = document.getElementById("tip");
+// Touch: Tooltip über dem Finger, bleibt nach dem Loslassen stehen, bis woanders hingetippt wird
+function showTip(e, html){ tipEl.innerHTML=html; tipEl.classList.remove("hidden");
+  const touch = e.pointerType==="touch" || e.pointerType==="pen";
+  const w=tipEl.offsetWidth, h=tipEl.offsetHeight;
+  let x = touch ? e.clientX - w/2 : e.clientX+14;
+  let y = touch ? e.clientY - h - 28 : e.clientY+14;
+  if (touch && y < 8) y = e.clientY + 32;
+  x = Math.max(8, Math.min(x, innerWidth-w-8)); y = Math.max(8, Math.min(y, innerHeight-h-8));
+  tipEl.style.left=x+"px"; tipEl.style.top=y+"px"; }
+function hideTip(){ tipEl.classList.add("hidden"); }
+let tipOwner=null;
+document.addEventListener("pointerdown", e=>{ if (tipOwner && !tipOwner.contains(e.target)){ tipOwner.dispatchEvent(new Event("tipclear")); tipOwner=null; hideTip(); } }, true);
+addEventListener("scroll", ()=>{ if (tipOwner){ tipOwner.dispatchEvent(new Event("tipclear")); tipOwner=null; hideTip(); } }, {passive:true, capture:true});
+function niceMax(v){ if (v<=0) return 1; const p=Math.pow(10,Math.floor(Math.log10(v))); const n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+const kE = v => v>=1000 ? fN(v/1000,0)+" T€" : fN(v,0)+" €";
+function lineChart(id, series){
+  const W=760,H=300,L=58,R=12,T=12,B=30, n=series[0].data.length;
+  const max = niceMax(Math.max(...series.flatMap(s=>s.data)));
+  const x = i => L + i*(W-L-R)/(n-1), y = v => T + (1-v/max)*(H-T-B);
+  let g = "";
+  for (let i=0;i<=4;i++){ const v=max*i/4; g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${kE(v)}</text>`; }
+  for (let i=0;i<n;i+=5) g+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle">${i===0?"Start":"J. "+i}</text>`;
+  const lines = series.map(s=>`<polyline fill="none" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round" points="${s.data.map((v,i)=>x(i)+","+y(v)).join(" ")}"/>`).join("");
+  const el = document.getElementById(id);
+  el.innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}">${g}${lines}<line id="${id}-cur" y1="${T}" y2="${H-B}" stroke="var(--muted)" stroke-dasharray="3 3" visibility="hidden"/><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent"/></svg>
+    <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join("")}</div>`;
+  const svg = el.querySelector("svg"), cur = el.querySelector(`#${id}-cur`);
+  const at = e => { const r=svg.getBoundingClientRect(); const px=(e.clientX-r.left)*W/r.width; const i=Math.max(0,Math.min(n-1,Math.round((px-L)/((W-L-R)/(n-1)))));
+    cur.setAttribute("x1",x(i)); cur.setAttribute("x2",x(i)); cur.setAttribute("visibility","visible");
+    showTip(e, `<b>${i===0?"Start":"Ende Jahr "+i}</b><br>`+series.map(s=>`<span style="color:${s.color}">●</span> ${s.name}: ${fE(s.data[i])}`).join("<br>")); };
+  const clear = ()=>{ cur.setAttribute("visibility","hidden"); hideTip(); };
+  svg.onpointerdown = e => { tipOwner=svg; at(e); };
+  svg.onpointermove = e => { if (e.pointerType==="mouse" || tipOwner===svg) at(e); };
+  svg.onpointerleave = e => { if (e.pointerType==="mouse") clear(); };
+  svg.addEventListener("tipclear", clear);
+}
+function barChart(id, Y){
+  const W=760,H=260,L=58,R=12,T=12,B=30, n=Y.length;
+  const max = niceMax(Math.max(...Y.map(r=>r.cash)));
+  const bw=(W-L-R)/n, y=v=>T+(1-v/max)*(H-T-B);
+  let g="";
+  for (let i=0;i<=4;i++){ const v=max*i/4; g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${kE(v)}</text>`; }
+  Y.forEach((r,i)=>{ const x0=L+i*bw+2, w=bw-4;
+    g+=`<g data-i="${i}"><rect x="${x0}" y="${y(r.tilg)}" width="${w}" height="${y(0)-y(r.tilg)}" fill="var(--c3)" rx="1.5"/><rect x="${x0}" y="${y(r.cash)}" width="${w}" height="${y(r.tilg)-y(r.cash)}" fill="var(--c4)" rx="1.5"/><rect x="${L+i*bw}" y="${T}" width="${bw}" height="${H-T-B}" fill="transparent"/></g>`;
+    if ((i+1)%5===0||i===0) g+=`<text x="${x0+w/2}" y="${H-10}" text-anchor="middle">J. ${r.y}</text>`; });
+  const el=document.getElementById(id);
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg><div class="legend"><span><i style="background:var(--c3)"></i>Tilgung (Rückzahlung)</span><span><i style="background:var(--c4)"></i>Zinsen</span></div>`;
+  // Ein Handler für das ganze Diagramm: per Finger über die Balken wischen
+  const svg = el.querySelector("svg");
+  const at = e => { const rc=svg.getBoundingClientRect(); const px=(e.clientX-rc.left)*W/rc.width; const i=Math.max(0,Math.min(n-1,Math.floor((px-L)/bw)));
+    const r=Y[i]; svg.querySelectorAll("g[data-i]").forEach(g=>g.style.opacity = +g.dataset.i===i ? "1" : ".55");
+    showTip(e,`<b>Jahr ${r.y}</b><br>Tilgung: ${fE(r.tilg)}<br>Zinsen: ${fE(r.J,2)}<br>Gesamt: ${fE(r.cash)}`); };
+  const clear = ()=>{ svg.querySelectorAll("g[data-i]").forEach(g=>g.style.opacity=""); hideTip(); };
+  svg.onpointerdown = e => { tipOwner=svg; at(e); };
+  svg.onpointermove = e => { if (e.pointerType==="mouse" || tipOwner===svg) at(e); };
+  svg.onpointerleave = e => { if (e.pointerType==="mouse") clear(); };
+  svg.addEventListener("tipclear", clear);
+}
+
+// ---------- Szenarien ----------
+// Jedes Szenario ist ein vollständiger Stand der Eingaben. Genau eines ist aktiv; jede Änderung gehört zum aktiven.
+function rechne(w){ const keep=S; S=Object.assign({}, keep, JSON.parse(JSON.stringify(w))); let r; try{ r=compute(); } finally { S=keep; } return r; }
+const szSrc = i => i===S.aktiv ? S : S.szenarien[i].w;
+const szSum = (w,keys) => keys.reduce((s,k)=>s+(w[k]||[]).reduce((a,v)=>a+(+v||0),0),0);
+function szAktivieren(i){
+  if (!S.szenarien[i] || i===S.aktiv) return false;
+  syncAktiv(); S.aktiv=i; Object.assign(S, JSON.parse(JSON.stringify(S.szenarien[i].w)));
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  persist(); render(); return true;
+}
+function szNeu(vonIndex, name){
+  if (S.szenarien.length>=6){ toast("Höchstens 6 Szenarien – bitte erst eines entfernen"); return; }
+  syncAktiv();
+  const w = JSON.parse(JSON.stringify(S.szenarien[vonIndex].w));
+  S.szenarien.push({name:name.slice(0,30), w}); S.aktiv=S.szenarien.length-1; Object.assign(S, JSON.parse(JSON.stringify(w)));
+  persist(); render();
+  toast(`„${name}“ angelegt und aktiv – jetzt die Werte ändern`);
+}
+function buildSz(){
+  const el=document.getElementById("szList");
+  el.innerHTML = S.szenarien.map((z,i)=>`<div class="card sz" data-szcard="${i}">
+    <div class="sz-head"><input class="sz-name" data-szname="${i}" maxlength="30" aria-label="Name des Szenarios" autocomplete="off"><span class="sz-tag" data-sztag="${i}"></span></div>
+    ${SZ_KEYS.map(k=>{ const [l,u]=SZ_LABEL[k];
+      const ctrl = k==="zinsbindung" ? `<select data-sz="${i}" data-szk="${k}">${[5,10,15,20,25,30].map(v=>`<option value="${v}">${v} Jahre</option>`).join("")}</select><span aria-hidden="true">▾</span>`
+        : `<input data-sz="${i}" data-szk="${k}" inputmode="decimal"><span>${u}</span>`;
+      return `<div class="field"><label>${l}</label><div class="inp">${ctrl}</div></div>`; }).join("")}
+    <p class="note sz-info" data-szinfo="${i}"></p>
+    <div class="acts"><button class="btn primary" data-szact="show" data-i="${i}">In der Übersicht zeigen</button>
+      <button class="btn" data-szact="dup" data-i="${i}">Duplizieren</button>
+      <button class="btn" data-szact="del" data-i="${i}">Entfernen</button></div></div>`).join("");
+  addSteppers(el);
+}
+function renderSz(){
+  const el=document.getElementById("szList");
+  if (el.querySelectorAll("[data-szcard]").length !== S.szenarien.length) buildSz();
+  S.szenarien.forEach((z,i)=>{ const c=el.querySelector(`[data-szcard="${i}"]`); if(!c) return; const on=i===S.aktiv, w=szSrc(i);
+    c.classList.toggle("on",on); c.querySelector("[data-sztag]").textContent = on?"● aktiv":"";
+    c.querySelector('[data-szact="show"]').textContent = on ? "Zur Übersicht" : "In der Übersicht zeigen";
+    c.querySelector('[data-szact="del"]').hidden = S.szenarien.length<2;
+    const stM=szSum(w,["stKombiBank","stKombiAnja"]), stS=szSum(w,["stSandra"]);
+    c.querySelector("[data-szinfo]").textContent = [
+      `Anschlusszins: ${w.anschlussAktiv ? fN(+w.anschlussZins||0,2)+" %" : "aus"}`,
+      `Sondertilgungen: ${stM+stS>0 ? fE(stM)+" Sohn, "+fE(stS)+" Tochter" : "keine"}`,
+      (String(w.angebotKombi||"").trim()||String(w.angebotVoll||"").trim()) ? "mit Bankangebot" : null,
+      String(w.bankrate||"").trim() ? `Bankrate fest ${fmtIn("bankrate",w.bankrate)} €` : null,
+      String(w.mindestAnja||"").trim() ? `Mindestrate Mutter ${fmtIn("mindestAnja",w.mindestAnja)} €` : null
+    ].filter(Boolean).join(" · "); });
+  // Umschalter in der Übersicht
+  document.getElementById("szBar").innerHTML = `<span class="lbl">Szenario:</span>` +
+    S.szenarien.map((z,i)=>`<button class="chip ${i===S.aktiv?"on":""}" data-szact="apply" data-i="${i}" aria-pressed="${i===S.aktiv}">${esc(z.name||"Szenario "+(i+1))}</button>`).join("") +
+    (S.szenarien.length<6 ? `<button class="chip ghost" data-szact="add">+ Neu</button>` : "") + `<button class="chip ghost" data-go="szen">Verwalten</button>`;
+  // Vergleichstabelle
+  const R = S.szenarien.map((z,i)=> i===S.aktiv ? C : rechne(z.w));
+  const n = R.length+1;
+  const zeile = (l,f) => row([l, ...R.map((r,i)=>f(r,szSrc(i)))]);
+  document.getElementById("tblSzen").innerHTML =
+    head(["Kennzahl", ...S.szenarien.map((z,i)=>esc(z.name||"Szenario "+(i+1))+(i===S.aktiv?" ●":""))]) +
+    `<tr class="grp"><td colspan="${n}">Mutter</td></tr>` +
+    zeile("Frei verfügbar bei Übergabe", r=>fE(r.cashFrei)) + zeile("Rückzahlung pro Monat am Anfang", r=>fE(r.rueckflussMonat)) + zeile("ab Abruf der Tochter", r=>r.abruf>0 ? fE(r.rueckflussSpaeter)+` (nach ${fN(r.abruf)} Mon.)` : "–") +
+    zeile("Zinsen im 1. Jahr", r=>fE(r.zinsJahr1)) + zeile("Zinsen insgesamt", r=>fE(r.zinsertragAnja)) +
+    `<tr class="grp"><td colspan="${n}">Sohn</td></tr>` +
+    zeile("Monatliche Belastung", r=>fE(r.belastung)) + zeile("davon Bank / Mutter", r=>`${fE(r.rateBankKombi)} / ${fE(r.rateM)}`) + zeile("Bankkredit", r=>fE(r.bankKombi)) + zeile("Bankzins", r=>fP(r.zinsKombi)) +
+    zeile("Anschlusszins", (r,w)=>r.anschluss!==null && w.zinsbindung<30 ? fP(r.anschluss) : "–") + zeile("Sondertilgungen", r=>fE(r.kSonder+r.kFreiSonder)) +
+    zeile("Schuldenfrei nach", r=>r.ok30?fJ(r.kFrei):"über 30 J.") + zeile("Zinsen insgesamt", r=>fE(r.zinsGesK)) + zeile("Ersparnis ggü. Vollkredit", r=>signE(r.zinsGesV-r.zinsGesK)) +
+    `<tr class="grp"><td colspan="${n}">Tochter</td></tr>` +
+    zeile("Erhält bei Übergabe", r=>fE(r.auszahlungSandra)) + zeile("Schuldenfrei nach", r=>r.lzS) +
+    `<tr class="grp"><td colspan="${n}">Prüfung</td></tr>` +
+    zeile("Hinweise", r=>{ const k=r.warn.length+[r.okRaten,r.ok30,r.okSandra].filter(x=>!x).length; return k?`<span class="neg">⚠ ${k}</span>`:`<span class="pos">✓</span>`; });
+}
+document.getElementById("szAdd").onclick=()=>szNeu(S.aktiv, "Szenario "+(S.szenarien.length+1));
+document.addEventListener("click", e=>{
+  const sw=e.target.closest("[data-sw]"); if (sw){ S[sw.dataset.sw]=!S[sw.dataset.sw]; persist(); render(); return; }
+  const b=e.target.closest("[data-szact]"); if(!b) return;
+  const act=b.dataset.szact;
+  if (act==="add"){ szNeu(S.aktiv, "Szenario "+(S.szenarien.length+1)); return; }
+  const i=+b.dataset.i, z=S.szenarien[i]; if(!z) return;
+  if (act==="apply"){ if (szAktivieren(i)) toast(`Szenario „${z.name}“`); }
+  else if (act==="show"){ szAktivieren(i); document.querySelector('nav .tab[data-tab="cockpit"]').click(); }
+  else if (act==="dup"){ szNeu(i, (z.name+" (Kopie)")); }
+  else if (act==="del"){
+    if (S.szenarien.length<2) return;
+    if (!b.classList.contains("danger")){ b.classList.add("danger"); b.textContent="Wirklich? Nochmal tippen"; setTimeout(()=>{ if(b.isConnected){ b.classList.remove("danger"); b.textContent="Entfernen"; } },4000); return; }
+    syncAktiv();
+    const warAktiv = i===S.aktiv;
+    S.szenarien.splice(i,1);
+    if (warAktiv){ S.aktiv=Math.max(0,i-1); Object.assign(S, JSON.parse(JSON.stringify(S.szenarien[S.aktiv].w))); }
+    else if (i<S.aktiv) S.aktiv--;
+    buildSz(); persist(); render(); toast(`Szenario „${z.name}“ entfernt`);
+  }
+});
+
+// ---------- Geführte Abfrage: Szenario Schritt für Schritt ----------
+const ohneKredit = w => !(w.kreditMarcus>0) && !(w.kreditSandra>0);
+const wizMonat = r => r.abruf>0 && r.rueckflussSpaeter>r.rueckflussMonat+0.5 ? `Mutter bekommt am Anfang ${fE(r.rueckflussMonat)} im Monat (nur vom Sohn). Sobald Tochter ihren Kredit abruft, sind es ${fE(r.rueckflussSpaeter)}.` : `Mutter bekommt von beiden zusammen ${fE(r.rueckflussMonat)} im Monat.`;
+const wizZiel = r => !(wiz.ziel>0) ? "" : r.rueckflussMonat >= wiz.ziel-0.5 ? ` Mutters Wunsch von ${fE(wiz.ziel)} im Monat ist damit erfüllt.`
+  : r.rueckflussSpaeter >= wiz.ziel-0.5 ? ` Mutters Wunsch von ${fE(wiz.ziel)} wird also erst erreicht, wenn Tochter ihren Kredit abruft. Bis dahin fehlen ${fE(wiz.ziel-r.rueckflussMonat)} im Monat.`
+  : ` Zu Mutters Wunsch von ${fE(wiz.ziel)} im Monat fehlen ${fE(wiz.ziel-r.rueckflussSpaeter)}.`;
+const wizZielFehlt = r => wiz.ziel>0 && r.rueckflussMonat < wiz.ziel-0.5;
+const WIZ = [
+  {k:"_name", text:true, q:"Wie soll dieses Szenario heißen?", h:"Ein kurzer Name, damit du es später wiederfindest. Zum Beispiel „Mit 2,5 % Zins“."},
+  {k:"_ziel", u:"€", st:50, q:"Wie viel Geld möchte Mutter jeden Monat bekommen?", h:"Gemeint ist das Geld, das Sohn und Tochter zusammen jeden Monat an Mutter zurückzahlen. Die weiteren Fragen richten sich danach.",
+   get:()=>wiz.ziel, set:(w,v)=>{ wiz.ziel=v; }, chips:()=>[[400],[600],[800],[1000]]},
+  {k:"cashWunsch", u:"€", st:1000, q:"Wie viel Geld möchte Mutter sofort zur Verfügung haben?", h:"Für den Umzug, für Anschaffungen und als Reserve."},
+  {k:"schenkMarcus", u:"€", st:1000, q:"Wie viel erlässt Mutter Sohn vom Kaufpreis?", h:"Diesen Betrag muss Sohn nicht bezahlen. Es ist ein Geschenk von Mutter.",
+   pre:w=>`Das Haus ist mit ${fE(w.hauswert)} bewertet.`,
+   info:(w,r)=>`Sohn zahlt für das Haus dann ${fE(r.kaufpreis)}.`},
+  {k:"schenkSandra", u:"€", st:1000, q:"Wie viel bekommt Tochter als Ausgleich?", h:"Damit beide Kinder gleich viel bekommen, erhält Tochter diesen Betrag in bar.",
+   chips:w=>[[w.schenkMarcus,"gleich wie Sohn"]], info:(w,r)=>`Für Mutter bleiben vom Haus ${fE(r.anspruchAnja)}.`},
+  {k:"kreditMarcus", u:"€", st:5000, q:"Wie viel Geld leiht Mutter an den Sohn?", h:"Diesen Teil bekommt Mutter nicht sofort, sondern in Monatsraten mit Zinsen zurück. Dafür braucht Sohn weniger Geld von der Bank.",
+   chips:()=>[[0,"kein Kredit"],[25000],[50000],[75000]], info:(w,r)=>`Sohn braucht dann noch ${fE(r.bankKombi)} von der Bank.`},
+  {k:"kreditSandra", u:"€", st:5000, q:"Wie viel Geld leiht Mutter an die Tochter?", h:"Auch das kommt in Monatsraten mit Zinsen zurück.",
+   chips:()=>[[0,"kein Kredit"],[25000],[50000],[75000]],
+   info:(w,r)=>`Mutter hat dann ${fE(r.cashFrei)} frei zur Verfügung. ` + (r.abweichung>=0 ? `Das sind ${fE(r.abweichung)} mehr als gewünscht.` : `Das sind ${fE(-r.abweichung)} weniger als gewünscht. Dafür müssten die Kredite oder die Geschenke kleiner sein.`)
+     + (ohneKredit(w) && wiz.ziel>0 ? " Ohne Kredite bekommt Mutter aber kein Geld im Monat zurück." : ""),
+   bad:(w,r)=>r.abweichung<0 || (ohneKredit(w) && wiz.ziel>0)},
+  {k:"abrufSandra", u:"Monate", st:6, skip:w=>!(w.kreditSandra>0), q:"Wann braucht Tochter ihren Kredit voraussichtlich?",
+   h:"Tochter bekommt ihren Kredit erst, wenn sie ihn braucht. Bis dahin bleibt das Geld bei Mutter und kann auf einem Tagesgeldkonto Zinsen bringen. Tochter zahlt in dieser Zeit noch nichts zurück. Wenn der Zeitpunkt offen ist, hilft eine Schätzung.",
+   chips:()=>[[0,"sofort"],[3,"in 3 Monaten"],[12,"in 1 Jahr"],[24,"in 2 Jahren"]],
+   info:(w,r)=>r.abruf>0 ? `Bei der Übergabe hat Mutter ${fE(r.cashAnja)}. Davon legt sie ${fE(r.reserviert)} für die Tochter zurück, frei bleiben ${fE(r.cashFrei)}. Auf einem Tagesgeldkonto bringt das zurückgelegte Geld bis dahin rund ${fE(r.tgZins)} Zinsen.` : `Tochter bekommt den Kredit gleich bei der Übergabe.`},
+  {k:"zinsAnja", u:"%", st:0.25, dec:2, skip:ohneKredit, q:"Wie viel Zinsen sollen Sohn und Tochter an Mutter zahlen?",
+   h:"Zum Vergleich: Bei der Bank kostet ein Kredit über 4 %, eine sichere Geldanlage bringt gut 2 %. Je niedriger der Zins, desto mehr hilft Mutter ihren Kindern.",
+   chips:()=>[[0,"0 %"],[1.5,"1,5 %"],[2,"2 %"],[2.5,"2,5 %"],[3,"3 %"]], info:(w,r)=>`Mutter bekommt dann im 1. Jahr ${fE(r.zinsJahr1)} Zinsen, insgesamt ${fE(r.zinsertragAnja)}.`},
+  {k:"_zinsfrei", u:"Monate", st:6, skip:w=>ohneKredit(w) || !(w.zinsAnja>0), q:"Soll es am Anfang eine Zeit ohne Zinsen geben?",
+   h:"In dieser Zeit zahlen Sohn und Tochter nur zurück, ohne Zinsen. Das hilft ihnen am Anfang am meisten, wenn sie die höchsten Ausgaben haben. An dem, was Mutter im Monat bekommt, ändert das nichts.",
+   get:w=>w.zinsfreiMarcus, set:(w,v)=>{ w.zinsfreiMarcus=v; w.zinsfreiSandra=v; },
+   chips:()=>[[0,"nein"],[6,"6 Monate"],[12,"1 Jahr"],[24,"2 Jahre"]], info:(w,r)=>`Mutter bekommt dann im 1. Jahr ${fE(r.zinsJahr1)} Zinsen, insgesamt ${fE(r.zinsertragAnja)}.`},
+  {k:"budgetMarcus", u:"€", st:50, q:"Wie viel kann Sohn insgesamt im Monat zahlen?", h:"Gemeint ist alles zusammen: die Rate an die Bank und die Rate an Mutter."},
+  {k:"rateMarcus", u:"€", st:25, skip:w=>!(w.kreditMarcus>0) || parse(w.bankrate)>0, q:"Wie viel davon zahlt Sohn im Monat an Mutter zurück?", h:"Der Rest seines Monatsbetrags geht an die Bank. Der Vorschlag richtet sich nach Mutters Wunsch.",
+   info:(w,r)=>`Sohn zahlt ${fE(r.rateBankKombi)} an die Bank und ${fE(r.rateM)} an Mutter. Sein Kredit bei Mutter ist nach ${r.lzM} zurückgezahlt.` + (w.kreditSandra>0 ? "" : wizZiel(r)),
+   bad:(w,r)=>!(w.kreditSandra>0) && wizZielFehlt(r)},
+  {k:"rateSandra", u:"€", st:25, skip:w=>!(w.kreditSandra>0), q:"Wie viel zahlt Tochter im Monat an Mutter zurück?", h:"Je höher die Rate, desto schneller ist der Kredit zurückgezahlt. Der Vorschlag richtet sich nach Mutters Wunsch.",
+   info:(w,r)=>`Der Kredit der Tochter ist ${r.abruf>0?"ab dem Abruf ":""}nach ${r.lzS} zurückgezahlt. ` + wizMonat(r) + wizZiel(r), bad:(w,r)=>wizZielFehlt(r)},
+  {k:"_ende", ende:true, q:"Fertig – so sieht es aus"}
+];
+// Raten nach Mutters Monatswunsch vorschlagen (solange die Frage noch nicht beantwortet wurde)
+function wizVorschlag(){
+  if (!(wiz.ziel>0)) return; const w = wiz.w;
+  const mFrei = w.kreditMarcus>0 && !(parse(w.bankrate)>0), sDa = w.kreditSandra>0;
+  if (mFrei && !wiz.touch.rateMarcus) w.rateMarcus = sDa ? Math.round(wiz.ziel*w.kreditMarcus/(w.kreditMarcus+w.kreditSandra)/5)*5 : wiz.ziel;
+  if (sDa && !wiz.touch.rateSandra) w.rateSandra = Math.max(0, Math.round(wiz.ziel - (w.kreditMarcus>0 ? rechne(w).rateM : 0)));
+}
+const wiz = {el:document.getElementById("wiz"), i:0, w:null, name:"", ziel:0, touch:{}};
+const wizQ = id => document.getElementById(id);
+const wizVal = s => s.get ? s.get(wiz.w) : wiz.w[s.k];
+const wizFmt = (s,v) => fN(+v||0, s.dec ?? (Math.abs((+v||0)%1)>0 ? 2 : 0));
+const wizAktiv = () => WIZ.map((s,i)=>i).filter(i=>!(WIZ[i].skip && WIZ[i].skip(wiz.w)));
+function wizStart(){
+  if (S.szenarien.length>=6){ toast("Höchstens 6 Szenarien – bitte erst eines entfernen"); return; }
+  syncAktiv(); wiz.w = snap(S); wiz.name = "Szenario "+(S.szenarien.length+1); wiz.i = 0; wiz.ziel = Math.round(C.rueckflussSpaeter); wiz.touch = {};
+  wiz.el.hidden = false; wizRender();
+}
+function wizClose(){ wiz.el.hidden = true; }
+function wizInfo(){
+  const s = WIZ[wiz.i], box = wizQ("wizInfo"); if (s.ende || s.text){ box.hidden = true; return; }
+  const r = rechne(wiz.w);
+  const warn = r.warn[0], txt = s.info ? s.info(wiz.w, r) : "";
+  box.hidden = !(warn || txt);
+  box.className = "status " + (warn || (s.bad && s.bad(wiz.w, r)) ? "warn" : "ok");
+  box.textContent = warn ? "⚠ " + warn : txt;
+}
+function wizLesen(){            // aktuelle Eingabe in den Arbeitsstand übernehmen
+  const s = WIZ[wiz.i], inp = wizQ("wizIn"); if (!inp || s.ende) return true;
+  if (s.text){ wiz.name = inp.value.trim().slice(0,30) || wiz.name; return true; }
+  const v = parse(inp.value); if (isNaN(v)) return false;
+  const x = Math.max(0, v); if (s.set) s.set(wiz.w, x); else wiz.w[s.k] = x; return true;
+}
+function wizRender(){
+  const akt = wizAktiv(), pos = akt.indexOf(wiz.i), s = WIZ[wiz.i];
+  if (s.k==="rateMarcus" || s.k==="rateSandra" || s.ende) wizVorschlag();
+  wizQ("wizStep").textContent = s.ende ? "Zusammenfassung" : `Frage ${pos+1} von ${akt.length-1}`;
+  wizQ("wizBar").style.width = Math.round((pos+1)/akt.length*100) + "%";
+  wizQ("wizFrage").textContent = s.q; wizQ("wizHelp").textContent = (s.pre ? s.pre(wiz.w)+" " : "") + (s.h || ""); wizQ("wizHelp").hidden = !s.h;
+  wizQ("wizBack").hidden = pos===0; wizQ("wizNext").textContent = s.ende ? "Szenario anlegen" : "Weiter";
+  const body = wizQ("wizBody");
+  if (s.ende){
+    const r = rechne(wiz.w), hinw = [...r.warn, ...(wizZielFehlt(r)?[`Mutter bekommt ${r.abruf>0?"am Anfang ":""}im Monat ${fE(wiz.ziel-r.rueckflussMonat)} weniger, als sie sich wünscht`]:[]), ...(r.abweichung<0?[`Mutter hat sofort ${fE(-r.abweichung)} weniger zur Verfügung, als sie sich wünscht`]:[]), ...(r.okRaten?[]:["Eine Rate deckt die Zinsen nicht"]), ...(r.ok30?[]:["Sohn ist nach 30 Jahren noch nicht schuldenfrei"]), ...(r.okSandra?[]:["Die Rate der Tochter ist zu niedrig"])];
+    const z = (l,v) => `<tr><td>${l}</td><td>${v}</td></tr>`;
+    body.innerHTML = `<div class="wiz-name">„${esc(wiz.name)}“</div><table class="cmp wiz-sum">
+      <tr class="grp"><td colspan="2">Mutter</td></tr>
+      ${z(r.abruf>0 && r.rueckflussSpaeter>r.rueckflussMonat+0.5 ? "Bekommt jeden Monat am Anfang" : "Bekommt jeden Monat", fE(r.rueckflussMonat) + (wiz.ziel>0 ? ` <small>(Wunsch ${fE(wiz.ziel)})</small>` : ""))}${r.abruf>0 && r.rueckflussSpaeter>r.rueckflussMonat+0.5 ? z(`ab Abruf der Tochter (nach ${fN(r.abruf)} Monaten)`, fE(r.rueckflussSpaeter)) : ""}${z("So lange laufen die Zahlungen", ohneKredit(wiz.w) ? "keine Kredite" : [wiz.w.kreditMarcus>0 ? "Sohn "+r.lzM : null, wiz.w.kreditSandra>0 ? "Tochter "+r.lzS : null].filter(Boolean).join(", "))}${z("Frei verfügbar bei der Übergabe", fE(r.cashFrei) + ` <small>(Wunsch ${fE(wiz.w.cashWunsch)})</small>`)}${r.reserviert>0 ? z("Zurückgelegt für den Kredit der Tochter", fE(r.reserviert)) : ""}
+      ${z("Zinsen im 1. Jahr", fE(r.zinsJahr1))}${z("Zinsen insgesamt", fE(r.zinsertragAnja))}
+      <tr class="grp"><td colspan="2">Sohn</td></tr>
+      ${z("Zahlt jeden Monat", fE(r.belastung))}${z("davon an die Bank / an Mutter", fE(r.rateBankKombi)+" / "+fE(r.rateM))}${z("Schuldenfrei nach", r.lzK)}
+      <tr class="grp"><td colspan="2">Tochter</td></tr>
+      ${z("Bekommt bei der Übergabe", fE(r.auszahlungSandra))}${wiz.w.kreditSandra>0 ? z("Kredit von Mutter", fE(wiz.w.kreditSandra) + (r.abruf>0 ? ` <small>(auf Abruf, nach ${fN(r.abruf)} Monaten)</small>` : "")) : ""}${z("Zahlt dann jeden Monat an Mutter", fE(r.rateS))}
+    </table>` + (hinw.length ? hinw.map(t=>status(false,"",t)).join("") : status(true,"Alles passt zusammen.",""));
+    wizQ("wizInfo").hidden = true; wizQ("wizNext").focus(); return;
+  }
+  const chips = s.chips ? s.chips(wiz.w).map(([v,l])=>`<button type="button" class="chip" data-wizv="${v}">${l || fE(v)}</button>`).join("") : "";
+  body.innerHTML = s.text
+    ? `<div class="wiz-inp"><input id="wizIn" class="wiz-text" maxlength="30" autocomplete="off" value="${esc(wiz.name)}"></div>`
+    : `<div class="wiz-inp"><button type="button" class="wiz-pm" data-wizd="-1" aria-label="weniger">−</button><input id="wizIn" inputmode="decimal" autocomplete="off" value="${wizFmt(s, wizVal(s))}"><span class="wiz-u">${s.u}</span><button type="button" class="wiz-pm" data-wizd="1" aria-label="mehr">+</button></div>`
+      + (chips ? `<div class="wiz-chips">${chips}</div>` : "");
+  wizInfo();
+  const inp = wizQ("wizIn"), v0 = inp.value; try{ inp.focus(); inp.select(); }catch(e){}
+  setTimeout(()=>{ try{ if (inp.isConnected && inp.value===v0){ inp.focus(); inp.select(); } }catch(e){} }, 60);
+}
+function wizGeh(d){
+  if (d>0 && !wizLesen()){ toast("Bitte eine Zahl eingeben"); return; }
+  if (d<0) wizLesen();
+  const s = WIZ[wiz.i];
+  if (d>0) wiz.touch[s.k] = true;
+  if (d>0 && s.ende){
+    syncAktiv(); S.szenarien.push({name:wiz.name, w:JSON.parse(JSON.stringify(wiz.w))}); S.aktiv = S.szenarien.length-1; Object.assign(S, JSON.parse(JSON.stringify(wiz.w)));
+    persist(); render(); wizClose(); document.querySelector('nav .tab[data-tab="cockpit"]').click(); toast(`Szenario „${wiz.name}“ ist angelegt und aktiv`); return;
+  }
+  const akt = wizAktiv(), pos = akt.indexOf(wiz.i), n = akt[pos+d];
+  if (n===undefined) return; wiz.i = n; wizRender();
+}
+document.getElementById("szWiz").onclick = wizStart;
+wizQ("wizX").onclick = wizClose; wizQ("wizBack").onclick = ()=>wizGeh(-1); wizQ("wizNext").onclick = ()=>wizGeh(1);
+wiz.el.addEventListener("click", e=>{
+  const s = WIZ[wiz.i], inp = wizQ("wizIn");
+  const c = e.target.closest("[data-wizv]"); if (c && inp){ inp.value = wizFmt(s, +c.dataset.wizv); wizLesen(); wizInfo(); return; }
+  const p = e.target.closest("[data-wizd]"); if (p && inp){ let v = parse(inp.value); if (isNaN(v)) v = 0; v = Math.max(0, Math.round((v + (+p.dataset.wizd)*s.st)*1000)/1000); inp.value = wizFmt(s, v); wizLesen(); wizInfo(); }
+});
+wiz.el.addEventListener("input", e=>{ if (e.target.id==="wizIn" && !WIZ[wiz.i].text && wizLesen()) wizInfo(); });
+wiz.el.addEventListener("keydown", e=>{ if (e.key==="Enter"){ e.preventDefault(); e.stopPropagation(); wizGeh(1); } else if (e.key==="Escape"){ e.stopPropagation(); wizClose(); } });
+
+// ---------- Navigation & Werkzeuge ----------
+document.addEventListener("click", e=>{ const g=e.target.closest("[data-go]"); if (g) document.querySelector(`nav .tab[data-tab="${g.dataset.go}"]`).click(); });
+document.querySelectorAll("nav .tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav .tab").forEach(x=>x.classList.toggle("active",x===b));
+  document.querySelectorAll("main > section").forEach(s=>s.classList.toggle("hidden", s.id!=="tab-"+b.dataset.tab));
+  try{ sessionStorage.setItem("tab", b.dataset.tab); }catch(e){}
+  try{ b.scrollIntoView({block:"nearest",inline:"nearest"}); }catch(e){}
+  nav.classList.remove("open"); btnMore.setAttribute("aria-expanded","false"); btnMore.textContent="Mehr …";
+  window.scrollTo(0,0);
+});
+const nav = document.querySelector("nav"), btnMore = document.getElementById("btnMore");
+function setNavH(){ document.documentElement.style.setProperty("--navh", (getComputedStyle(nav).position==="sticky" && innerWidth<=1300 ? nav.offsetHeight : 0)+"px"); }
+addEventListener("resize", setNavH); new ResizeObserver(setNavH).observe(nav); setNavH();
+// Weicher Rand an der Reiterleiste zeigt, dass es seitlich weitergeht
+const tabsEl = document.getElementById("tabs");
+function tabFade(){ tabsEl.classList.toggle("fl", tabsEl.scrollLeft>4); tabsEl.classList.toggle("fr", tabsEl.scrollLeft+tabsEl.clientWidth < tabsEl.scrollWidth-4); }
+tabsEl.addEventListener("scroll", tabFade, {passive:true}); addEventListener("resize", tabFade); new ResizeObserver(tabFade).observe(tabsEl); tabFade();
+btnMore.onclick = ()=>{ const o = nav.classList.toggle("open"); btnMore.setAttribute("aria-expanded", String(o)); btnMore.textContent = o ? "Weniger" : "Mehr …"; };
+const toastEl = document.getElementById("toast");
+function toast(msg){ toastEl.textContent=msg; toastEl.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>toastEl.hidden=true, 2600); }
+async function copyText(text, okMsg, ta){
+  try{ await navigator.clipboard.writeText(text); toast(okMsg); return; }catch(e){}
+  if (ta){ ta.focus(); ta.select(); toast("Text ist markiert – jetzt über „Kopieren“ im Menü kopieren"); }
+  else toast("Kopieren nicht möglich");
+}
+document.querySelectorAll(".seg[data-view]").forEach(seg=>seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  views[seg.dataset.view]=b.dataset.v; seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); render(); }));
+document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{ b.dataset.clear.split(",").forEach(k=>S[k]=Array(30).fill(0)); persist(); render(); });
+document.getElementById("btnCopyKombi").onclick=()=>{ S.stVoll = S.stKombiBank.map((v,i)=>(+v||0)+(+S.stKombiAnja[i]||0)); persist(); render(); };
+// Zurücksetzen: zweimal tippen statt confirm()-Dialog
+const btnReset = document.getElementById("btnReset");
+btnReset.onclick=()=>{
+  if (!btnReset.classList.contains("danger")){
+    btnReset.classList.add("danger"); btnReset.textContent="Wirklich zurücksetzen? Nochmal tippen";
+    clearTimeout(btnReset.t); btnReset.t=setTimeout(()=>{ btnReset.classList.remove("danger"); btnReset.textContent="Auf Ausgangswerte zurücksetzen"; }, 4000);
+    return;
+  }
+  clearTimeout(btnReset.t); btnReset.classList.remove("danger"); btnReset.textContent="Auf Ausgangswerte zurücksetzen";
+  Object.assign(S, snap(DEFAULTS)); S.topzins=clone(DEFAULTS.topzins); S.stufen=clone(DEFAULTS.stufen); persist(); render(); toast(`Szenario „${S.szenarien[S.aktiv].name}“ auf Ausgangswerte gesetzt`);
+};
+// Szenario: als Text kopieren / einfügen (Downloads sind im Viewer gesperrt)
+const dlg=document.getElementById("dlgSzenario"), dlgText=document.getElementById("dlgText");
+function loadScenario(text){ try{ const o=JSON.parse(text); if(!o||typeof o!=="object"||!("hauswert" in o)) throw 0; S=normalize(Object.assign(clone(DEFAULTS), o), o); persist(); render(); dlg.hidden=true; toast("Szenario übernommen"); }catch(err){ toast("Text ist kein gültiges Szenario"); } }
+document.getElementById("btnSave").onclick=()=>{ dlgText.value=JSON.stringify(S); dlg.hidden=false; };
+document.getElementById("dlgClose").onclick=()=>dlg.hidden=true;
+dlg.addEventListener("click", e=>{ if(e.target===dlg) dlg.hidden=true; });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && !dlg.hidden) dlg.hidden=true; });
+document.getElementById("dlgCopy").onclick=()=>copyText(dlgText.value, "Szenario kopiert", dlgText);
+document.getElementById("dlgApply").onclick=()=>loadScenario(dlgText.value);
+document.getElementById("dlgFile").onclick=()=>document.getElementById("fileIn").click();
+document.getElementById("fileIn").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{ loadScenario(rd.result); e.target.value=""; }; rd.readAsText(f); };
+// Tabellen tabulatorgetrennt kopieren – lässt sich direkt in Numbers oder Excel einfügen
+document.getElementById("btnCsv").onclick=()=>{
+  const n=v=>typeof v==="number"? String(Math.round(v*100)/100).replace(".",",") : v;
+  const tbl=(title,cols,rows)=>[title,cols.join("\t"),...rows.map(r=>r.map(n).join("\t")),""].join("\n");
+  const csv = "" +
+    tbl("Jahresübersicht",["Jahr","Restschuld Vollkredit","Restschuld Kombi","Sohn bei Mutter","Tochter bei Mutter","Zinsen Sohn","Zinsen Tochter","Zinsen gesamt","Steuerfrei","Cashflow Mutter"], C.Y.map(r=>[r.y,r.voll,r.kombi,r.anjaM,r.sandra,r.zm,r.zs,r.J,r.frei,r.cash])) +
+    tbl("Tilgungsplan Kombi",["Monat","Jahr","Restschuld Bank Start","Zins Bank","Tilgung Bank","Sondertilg. Bank","Restschuld Bank Ende","Restschuld Mutter Start","Zins Mutter","Tilgung Mutter","Sondertilg. Mutter","Restschuld Mutter Ende","Gesamtschuld","Leistung"], C.K.map(r=>[r.m,r.y,r.dB,r.e,r.f,r.g,r.h,r.dA,r.j,r.k,r.l,r.mm,r.n,r.o])) +
+    tbl("Tilgungsplan Vollkredit",["Monat","Jahr","Restschuld Start","Zins","Tilgung","Sondertilgung","Restschuld Ende","Leistung"], C.V.map(r=>[r.m,r.y,r.d,r.e,r.f,r.g,r.h,r.i])) +
+    tbl("Privatkredit Tochter",["Monat","Jahr","Restschuld Start","Zins","Tilgung","Sondertilgung","Restschuld Ende","Leistung"], C.SA.map(r=>[r.m,r.y,r.d,r.e,r.f,r.g,r.h,r.i]));
+  copyText(csv, "Alle Tabellen kopiert – in Numbers oder Excel einfügen");
+};
+
+buildInputs();
+document.querySelectorAll(".st-grid").forEach(g=>{
+  const keys=[...new Set([...g.querySelectorAll("[data-st]")].map(i=>i.dataset.st))];
+  const d=document.createElement("details"); d.className="stbox";
+  d.open = keys.some(k=>S[k].some(v=>+v>0));
+  d.innerHTML=`<summary>Werte für Jahr 1–30 eingeben <span class="note" data-stsum="${keys.join(",")}"></span></summary>`;
+  g.before(d); d.append(g);
+});
+render();
+try{ const t=sessionStorage.getItem("tab"); if(t) document.querySelector(`nav .tab[data-tab="${t}"]`)?.click(); }catch(e){}
+window.__compute = compute;
+
+// ---------- PDF-Export: alle Bereiche in eine PDF-Datei ----------
+// Die PDF entsteht im Gerät selbst. Geladen werden dafür nur zwei Programmbausteine (jsPDF), es werden keine Daten verschickt.
+const PDF_LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+                  "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"];
+const PDF_FARBE = {"--c1":"#c2533f","--c2":"#2f6fde","--c3":"#2a9d8f","--c4":"#8a63d2","--line":"#d5d9e0","--muted":"#677084"};
+function ladeSkript(src){ return new Promise((ok,err)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>ok(); s.onerror=()=>{ s.remove(); err(new Error("nicht geladen")); }; document.head.appendChild(s); }); }
+const pdfTxt = s => String(s==null?"":s).replace(/­/g,"").replace(/[−‑]/g,"-").replace(/≈\s*/g,"ca. ").replace(/→/g,"->")
+  .replace(/✓\s*/g,"").replace(/⚠\s*/g,"Achtung: ").replace(/💡\s*/g,"").replace(/●/g,"(aktiv)").replace(/⌘/g,"Cmd+").replace(/≥/g,">=").replace(/≤/g,"<=")
+  .replace(/[   ]/g," ").replace(/[^\x20-\x7e¡-ÿ€„“”‚‘’–—…•]/g,"").replace(/\s+/g," ").replace(/€ (?=\S)/g,"€  ").trim();
+const pdfHaupt = el => { if (!el) return ""; const c=el.cloneNode(true); c.querySelectorAll("small,button,kbd").forEach(x=>x.remove()); return pdfTxt(c.textContent); };
+const pdfKlein = el => { const s = el && el.querySelector("small"); return s ? pdfTxt(s.textContent) : ""; };
+const pdfCol = v => { const m=/var\((--[\w-]+)\)/.exec(v||""); return m ? (PDF_FARBE[m[1]]||"#677084") : (/^#[0-9a-f]{3,8}$/i.test((v||"").trim()) ? v.trim() : "#677084"); };
+
+function pdfBauen(){
+  const doc = new window.jspdf.jsPDF({orientation:"landscape", unit:"mm", format:"a4"});
+  const ML=12, W=297-2*ML, UNTEN=196;
+  let y=14, felder=[], ersteSeite=true;
+  const szName = (S.szenarien[S.aktiv] && S.szenarien[S.aktiv].name) || "Szenario";
+  const stand = new Date().toLocaleDateString("de-DE");
+  const need = h => { if (y+h > UNTEN){ doc.addPage(); y=14; } };
+  const tabelle = o => { doc.autoTable(Object.assign({startY:y, margin:{left:ML,right:ML,top:14,bottom:14}, theme:"grid",
+      styles:{font:"helvetica",fontSize:8.5,cellPadding:1.3,overflow:"linebreak",lineColor:[213,217,224],lineWidth:0.1,textColor:[29,35,48]},
+      headStyles:{fillColor:[47,111,222],textColor:255,fontStyle:"bold"}}, o)); y = doc.lastAutoTable.finalY + 5; };
+  const P = {
+    h2(t){ P.flush(); if (!ersteSeite){ doc.addPage(); y=14; } ersteSeite=false;
+      doc.setFont("helvetica","bold"); doc.setFontSize(15); doc.setTextColor(29,35,48); doc.text(pdfTxt(t), ML, y+4); y+=10; },
+    h3(t){ P.flush(); t=pdfTxt(t); if(!t) return; need(22); doc.setFont("helvetica","bold"); doc.setFontSize(10.5); doc.setTextColor(47,111,222); doc.text(t, ML, y+3); y+=7; },
+    para(t, fett){ P.flush(); t=pdfTxt(t); if(!t) return; doc.setFont("helvetica", fett?"bold":"normal"); doc.setFontSize(8.5); doc.setTextColor(80,88,104);
+      const z = doc.splitTextToSize(t, W); need(z.length*3.8+2); doc.text(z, ML, y+2.5); y += z.length*3.8 + 2.5; },
+    field(c){ const lab=c.querySelector("label"), inp=c.querySelector("input,select"), sw=c.querySelector(".sw");
+      let v = sw ? (sw.getAttribute("aria-checked")==="true" ? "an" : "aus")
+            : !inp ? "" : inp.tagName==="SELECT" ? (inp.selectedOptions[0] ? inp.selectedOptions[0].textContent : inp.value) : inp.value;
+      const u = c.querySelector(".inp > span:not([aria-hidden])");
+      v = pdfTxt(v); if (!sw && inp && inp.tagName!=="SELECT") v = v ? v + (u ? " "+pdfTxt(u.textContent) : "") : "-";
+      felder.push([pdfHaupt(lab), v, pdfKlein(lab)]); },
+    gruppe(t){ felder.push([{content:pdfTxt(t), colSpan:3, styles:{fontStyle:"bold",fillColor:[238,241,246]}}]); },
+    flush(){ if (!felder.length) return; const b=felder; felder=[]; if (!b.some(r=>r.length>1)) return;
+      tabelle({head:[["Eingabe","Wert","Hinweis"]], body:b, tableWidth:210, columnStyles:{0:{cellWidth:78},1:{cellWidth:34,halign:"right"}}}); },
+    kpis(c){ P.flush(); const b=[...c.querySelectorAll(".kpi")].map(k=>[pdfTxt((k.querySelector(".l")||{}).textContent), pdfTxt((k.querySelector(".v")||{}).textContent), pdfTxt((k.querySelector(".d")||{}).textContent)]);
+      if (b.length) tabelle({head:[["Kennzahl","Wert","Erläuterung"]], body:b, tableWidth:210, columnStyles:{0:{cellWidth:70},1:{cellWidth:50,halign:"right",fontStyle:"bold"}}}); },
+    who(c){ P.flush(); const wh=c.querySelector(".wh"); P.h3(wh ? pdfTxt(wh.querySelector("b").textContent)+" – "+pdfTxt(wh.querySelector("span").textContent) : "");
+      const b=[], big=c.querySelector(".big");
+      if (big) b.push([{content:pdfTxt(big.querySelector(".l").textContent),styles:{fontStyle:"bold"}}, {content:pdfTxt(big.querySelector(".v").textContent),styles:{fontStyle:"bold"}}, pdfTxt((big.querySelector(".d")||{}).textContent)]);
+      c.querySelectorAll("dl > dt").forEach(dt=>{ const dd=dt.nextElementSibling; if(!dd||dd.tagName!=="DD") return; const k=pdfKlein(dd);
+        b.push([pdfHaupt(dt), pdfHaupt(dd)+(k?" ("+k+")":""), pdfKlein(dt)]); });
+      if (b.length) tabelle({head:[["Kennzahl","Wert","Erläuterung"]], body:b, tableWidth:240, columnStyles:{0:{cellWidth:70},1:{cellWidth:58,halign:"right"}}}); },
+    domTable(t){ P.flush(); const head=[], body=[], gloss=t.classList.contains("gloss"); let n=0;
+      [...t.rows].forEach(r=>{ const cells=[...r.cells]; if(!cells.length) return; n=Math.max(n, cells.reduce((s,c)=>s+(c.colSpan||1),0));
+        const istKopf = cells.every(c=>c.tagName==="TH"), grp=r.classList.contains("grp"), hl=r.classList.contains("hl");
+        const z = cells.map((c,i)=>{ const st={}; if (!gloss && i>0 && !istKopf) st.halign="right"; if (grp){ st.fontStyle="bold"; st.fillColor=[238,241,246]; st.halign="left"; } if (hl||(gloss&&i===0&&!istKopf)) st.fontStyle="bold";
+          const hat=c.querySelector(".status"); let txt=pdfTxt(c.textContent); if (hat){ st.halign="left"; if (hat.classList.contains("ok")) txt="OK: "+txt; }
+          return {content:txt, colSpan:c.colSpan||1, styles:st}; });
+        (istKopf?head:body).push(z); });
+      if (!body.length) return;
+      const fs = n>=12 ? 6.2 : n>=8 ? 7 : 8.5, o={head, body, styles:{font:"helvetica",fontSize:fs,cellPadding:n>=8?0.9:1.3,overflow:"linebreak",lineColor:[213,217,224],lineWidth:0.1,textColor:[29,35,48]}};
+      if (gloss) o.columnStyles={0:{cellWidth:48},1:{cellWidth:100}}; else { o.headStyles={fillColor:[47,111,222],textColor:255,fontStyle:"bold",halign:"right"}; o.columnStyles={0:{halign:"left"}};
+        if (n<=3) o.tableWidth=190; else if (n<=5) o.tableWidth=230;
+        o.didParseCell = d => { if (d.section==="head" && d.column.index===0) d.cell.styles.halign="left"; }; }
+      tabelle(o); },
+    sonder(g){ P.flush(); const keys=[...new Set([...g.querySelectorAll("[data-st]")].map(e=>e.dataset.st))];
+      const name={stKombiBank:"Bank",stKombiAnja:"Mutter",stVoll:"Bank",stSandra:"Tochter"}, b=[];
+      for (let j=0;j<30;j++) if (keys.some(k=>(+S[k][j]||0)>0)) b.push(["Jahr "+(j+1), ...keys.map(k=>pdfTxt(fE(+S[k][j]||0)))]);
+      if (!b.length){ P.para("Keine Sondertilgungen eingetragen."); return; }
+      tabelle({head:[["Jahr", ...keys.map(k=>name[k]||k)]], body:b, tableWidth:40+keys.length*35, columnStyles:Object.fromEntries(keys.map((_,i)=>[i+1,{halign:"right"}]))}); },
+    szenarien(){ P.flush(); P.h3("Eingaben je Szenario");
+      tabelle({head:[["Eingabe", ...S.szenarien.map((z,i)=>pdfTxt(z.name||"Szenario "+(i+1))+(i===S.aktiv?" (aktiv)":""))]],
+        body:SZ_KEYS.map(k=>[pdfTxt(SZ_LABEL[k][0]), ...S.szenarien.map((z,i)=>{ const w = i===S.aktiv ? S : z.w; return pdfTxt(fmtIn(k,w[k])+" "+SZ_LABEL[k][1]); })]),
+        columnStyles:Object.fromEntries(S.szenarien.map((_,i)=>[i+1,{halign:"right"}]))}); },
+    chart(c){ P.flush(); const svg=c.querySelector("svg"), vb=(svg.getAttribute("viewBox")||"0 0 760 300").split(/\s+/).map(Number), k=190/vb[2];
+      need(vb[3]*k+12); const X=v=>ML+(+v)*k, Y=v=>y+(+v)*k;
+      const mal = n => { for (const e of n.children){ const a=q=>e.getAttribute(q), t=e.tagName.toLowerCase();
+        if (a("visibility")==="hidden") continue;
+        if (t==="g") mal(e);
+        else if (t==="line"){ doc.setDrawColor(pdfCol(a("stroke"))); doc.setLineWidth(0.12); doc.line(X(a("x1")),Y(a("y1")),X(a("x2")),Y(a("y2"))); }
+        else if (t==="polyline"){ const p=a("points").trim().split(/\s+/).map(s=>s.split(",").map(Number)); doc.setDrawColor(pdfCol(a("stroke"))); doc.setLineWidth(0.55);
+          for (let i=1;i<p.length;i++) doc.line(X(p[i-1][0]),Y(p[i-1][1]),X(p[i][0]),Y(p[i][1])); }
+        else if (t==="rect"){ const f=a("fill"); if (!f||f==="transparent"||f==="none"||!(+a("height")>0)||!(+a("width")>0)) continue; doc.setFillColor(pdfCol(f)); doc.rect(X(a("x")),Y(a("y")),a("width")*k,a("height")*k,"F"); }
+        else if (t==="text"){ doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(103,112,132); const an=a("text-anchor");
+          doc.text(pdfTxt(e.textContent), X(a("x")), Y(a("y")), {align: an==="end"?"right":an==="middle"?"center":"left"}); } } };
+      mal(svg); y += vb[3]*k + 2;
+      let x=ML; doc.setFontSize(8); doc.setTextColor(29,35,48);
+      c.querySelectorAll(".legend span").forEach(s=>{ const i=s.querySelector("i"), m=/background:\s*([^;]+)/.exec(i ? i.getAttribute("style")||"" : ""), t=pdfTxt(s.textContent);
+        doc.setFillColor(pdfCol(m?m[1]:"")); doc.rect(x, y+1, 5, 1.2, "F"); doc.text(t, x+7, y+2.4); x += 12 + doc.getTextWidth(t); });
+      y += 8; }
+  };
+  const walk = el => { for (const c of el.children){
+      if (c.hidden || c.classList.contains("hidden") || /^(BUTTON|INPUT|SELECT|SCRIPT|STYLE|TEXTAREA)$/.test(c.tagName)) continue;
+      if (c.matches(".field")){ P.field(c); continue; }
+      if (c.matches(".group-title,.gs-title")){ if (c.matches(".group-title")) P.gruppe(c.textContent); continue; }
+      if (c.matches(".st-grid")){ P.sonder(c); continue; }
+      if (c.matches(".sz-grid")){ P.szenarien(); continue; }
+      if (c.matches(".szbar,.row,.seg,.print-head,.keys")) continue;
+      if (c.matches(".note") && c.closest("#inputs")) continue;
+      const t=c.tagName;
+      if (t==="H2") P.h2(c.textContent);
+      else if (t==="H3"||t==="H4") P.h3(c.textContent);
+      else if (t==="TABLE") P.domTable(c);
+      else if (c.matches(".status")) P.para((c.classList.contains("ok")?"OK: ":"")+c.textContent, !c.classList.contains("ok"));
+      else if (t==="P") P.para(c.textContent);
+      else if (c.matches(".kpis")) P.kpis(c);
+      else if (c.matches(".who")) P.who(c);
+      else if (c.querySelector(":scope > svg.chart")) P.chart(c);
+      else walk(c);
+    } };
+  // Kopf
+  doc.setFont("helvetica","bold"); doc.setFontSize(18); doc.setTextColor(29,35,48); doc.text("Familienfinanzierung", ML, y+5);
+  doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(103,112,132); doc.text(pdfTxt(`Szenario „${szName}“ · Stand ${stand}`), ML, y+11); y += 18;
+  document.querySelectorAll("main > section").forEach(sec=>{ walk(sec); P.flush(); });
+  const n = doc.getNumberOfPages();
+  for (let i=1;i<=n;i++){ doc.setPage(i); doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(140,147,160);
+    doc.text(pdfTxt(`Familienfinanzierung · Szenario „${szName}“ · Stand ${stand} · Rechenmodell, ersetzt keine Beratung`), ML, 204); doc.text(`Seite ${i} von ${n}`, 297-ML, 204, {align:"right"}); }
+  return {doc, name:`Familienfinanzierung_${szName.replace(/[^\wäöüÄÖÜß]+/g,"-").replace(/^-|-$/g,"")||"Szenario"}_${new Date().toISOString().slice(0,10)}.pdf`};
+}
+async function pdfExport(){
+  const btn=document.getElementById("btnPdf"); if (btn.disabled) return;
+  const alt=btn.textContent; btn.disabled=true; btn.textContent="PDF wird erstellt …";
+  try{
+    try{ if (!(window.jspdf && window.jspdf.jsPDF)) await ladeSkript(PDF_LIBS[0]);
+         if (!window.jspdf.jsPDF.API.autoTable) await ladeSkript(PDF_LIBS[1]); }
+    catch(e){ if (document.getElementById("btnPrint")){ toast("Ohne Internet: Im Druckdialog „Als PDF sichern“ wählen (nur der aktuelle Bereich)"); setTimeout(()=>window.print(), 400); }
+              else toast("Für den PDF-Export wird eine Internetverbindung gebraucht"); return; }
+    const {doc, name} = pdfBauen(), blob = doc.output("blob");
+    let dl=null; try{ if (window.claude && typeof window.claude.use==="function") dl = await window.claude.use("downloads"); }catch(e){}
+    if (dl){ try{ await dl.save({filename:name, data:blob}); toast("PDF gesichert"); }
+             catch(e){ toast(e && e.code==="declined" ? "PDF-Export abgebrochen" : "Die PDF konnte hier nicht gesichert werden"); } }
+    else { const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+           toast("PDF erstellt – liegt bei den Downloads"); }
+  } catch(e){ console.error(e); toast("PDF-Export fehlgeschlagen: " + (e && e.message || e)); }
+  finally{ btn.disabled=false; btn.textContent=alt; }
+}
+document.getElementById("btnPdf").onclick = pdfExport;
+</script>
+
+<script>
+// Webapp-Fassung: Rechner einmal auf dem Gerät ablegen, damit er ohne Netz startet.
+if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(function (e) { console.warn('Start ohne Netz nicht möglich:', e); });
+</script>

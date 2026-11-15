@@ -1,0 +1,16 @@
+Neutrale Webapp-Fassung, gebaut aus Familienfinanzierung_Rechner-v5-iPad.html mit SHA-256 be738a2b25faa8d0afe0cb255de00f7b0e3217f48ac6eb38641207dc7995e2f8
+
+9c88bc8c19084def27ffe0acfd61a1c37235000c03bf4fd2d12d715f761cb5f8  index.html
+82e647a2706f53cbd6f0c771ad91952e21d6a96a757f0a38382cf4cc05334a8a  sw.js
+85a14baa9c42aec2b0cc139e2e642724484a2852ff05e04fb0e160f04e8fb826  manifest.webmanifest
+12d18155c884b3f1eace0051db76c69429c673b6753ddc2edf176dd5118cae94  symbol-180.png
+aa225e72f7be669d152c9c35dd4d29cdd2e93607245a49c129de6356a49fb0d7  symbol-512.png
+
+Content-Security-Policy:
+default-src 'none';
+script-src 'unsafe-inline' https://cdnjs.cloudflare.com;
+style-src 'unsafe-inline';
+img-src data: blob: 'self';
+connect-src 'none';
+worker-src 'self';
+manifest-src 'self'
